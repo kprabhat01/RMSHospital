@@ -110,3 +110,6 @@ G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\obj\Debug\RMSHospita
 G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\obj\Debug\RMSHospital.exe
 G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\obj\Debug\RMSHospital.pdb
 G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\obj\Debug\RMSHospital.csprojResolveAssemblyReference.cache
+G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\bin\Debug\MetroFramework.Design.dll
+G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\bin\Debug\MetroFramework.Fonts.dll
+G:\Projects\RMSHospital\Application\RMSHospital\RMSHospital\obj\Debug\WindowsFormsApplication1.I.StoreStock.resources

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 using System.Globalization;
+using System.Windows.Forms;
+using WindowsFormsApplication1.Classes;
+using System.Collections.Generic;
 
 namespace WindowsFormsApplication1.P
 {
@@ -25,11 +23,15 @@ namespace WindowsFormsApplication1.P
         TreeNode parentNode = null;
         int selectmenuid;
 
-        private void getMenugroup()
+        private void getMenugroup(int CatID)
         {
             try
             {
-                groupname.DataSource = Classes.MenuMaster.menugroup;
+                DataTable dt = new DataTable();
+                dt = Classes.MenuMaster.menugroup;
+                dt.DefaultView.RowFilter = "pro_inventory_cat_id=" + CatID + "";
+                dt = dt.DefaultView.ToTable();
+                groupname.DataSource = dt;
                 groupname.ValueMember = "id";
                 groupname.DisplayMember = "Name";
 
@@ -76,10 +78,47 @@ namespace WindowsFormsApplication1.P
         {
 
         }
+
+        private void getPatantmenu()
+        {
+            try
+            {
+                menulist.Nodes.Clear();
+                foreach (DataRow dr in MenuMaster.MenuGropTitle.Rows)
+                {
+                    parentNode = menulist.Nodes.Add(dr["Catname"].ToString());
+                    PreChild(int.Parse(dr["id"].ToString()));
+
+                }
+                // menulist.ExpandAll();
+            }
+            catch (Exception ex)
+            {
+                Classes.writeme.errorname(ex);
+                Classes.messagemode.messageget(false, "Error while loading menu.");
+
+            }
+        }
+        private void PreChild(int PreID)
+        {
+            try
+            {
+                DataTable dt = Classes.MenuMaster.menugroup;
+                TreeNode chidnode;
+                DataRow[] DrMenuSelected = dt.Select("pro_inventory_cat_id=" + PreID + "");
+                foreach (DataRow dr in DrMenuSelected)
+                {
+                    chidnode = parentNode.Nodes.Add(dr["name"].ToString());
+                    chidmenu(Convert.ToInt32(dr["id"].ToString()), chidnode);
+                }
+            }
+            catch (Exception ex) { }
+        }
         private void chidmenu(int parentid, TreeNode parentNode)
         {
+
             string menuname;
-            DataRow[] drrow = storemenu.Select("menugroup=" + parentid);
+            DataRow[] drrow = storemenu.Select("menugroup=" + parentid + "");
             //storemenu.DefaultView.RowFilter = "menugroup=" + parentid + "";
             TreeNode chidnode;
             foreach (DataRow dr in drrow)
@@ -100,30 +139,6 @@ namespace WindowsFormsApplication1.P
             }
 
         }
-        private void getPatantmenu()
-        {
-            try
-            {
-                menulist.Nodes.Clear();
-                DataTable dt = Classes.MenuMaster.menugroup;
-                
-
-                foreach (DataRow dr in dt.Rows)
-                {
-                    parentNode = menulist.Nodes.Add(dr["name"].ToString());
-                    chidmenu(Convert.ToInt32(dr["id"].ToString()), parentNode);
-
-                }
-                menulist.ExpandAll();
-
-            }
-            catch (Exception ex)
-            {
-                Classes.writeme.errorname(ex);
-                Classes.messagemode.messageget(false, "Error while loading menu.");
-
-            }
-        }
 
         private void MenuFilter()
         {
@@ -131,15 +146,33 @@ namespace WindowsFormsApplication1.P
             {
                 storemenu = Classes.MenuMaster.menulist;
                 storemenu.DefaultView.RowFilter = "storeid=" + Classes.Stores.SelectedStoreid + "";
-                storemenu = storemenu.DefaultView.ToTable(); 
+                storemenu = storemenu.DefaultView.ToTable();
             }
             catch (Exception ex)
             {
                 Classes.writeme.errorname(ex);
             }
         }
-
-
+        void GetProductCat()
+        {
+            try
+            {
+                //CmbProductType.Items.Add("");
+                CmbProductType.DataSource = MenuMaster.MenuGropTitle;
+                CmbProductType.DisplayMember = "Catname";
+                CmbProductType.ValueMember = "Id";
+                CmbProductType.SelectedIndex = -1;
+                // Unit Adding 
+                CmbUnit.DataSource = Inventory.listdata;
+                CmbUnit.ValueMember = "Id";
+                CmbUnit.DisplayMember = "name";
+                CmbUnit.SelectedValue = "0";
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         private void MenuItems_Load(object sender, EventArgs e)
         {
             SelectStore st = new SelectStore();
@@ -149,12 +182,14 @@ namespace WindowsFormsApplication1.P
                 this.MaximizeBox = false;
                 this.MinimizeBox = false;
                 this.Text = Classes.Stores.Selectedstorename;
-                getMenugroup();                
+               // getMenugroup();
 
                 //loading menulist for the store.
                 MenuFilter();
                 //gettting menu from filter
                 getPatantmenu();
+                // Finished product markation
+                GetProductCat();
             }
             else
             {
@@ -229,14 +264,14 @@ namespace WindowsFormsApplication1.P
                 }
                 catch (Exception ex)
                 {
-                    Classes.messagemode.messageget(false, "Please enter amount in proper format.");
+                    messagemode.messageget(false, "Please enter amount in proper format.");
                     return;
                 }
                 try
                 {
                     if (New.Checked == true)
                     {
-                        MySqlCommand cmd = new MySqlCommand("Insert into menu_items(menuname,printname,storeid,menugroup,status,code,orderitem,amount,tax,colorcode,sumAmu) values(?menuname,?printname," + Classes.Stores.SelectedStoreid + "," + groupname.SelectedValue.ToString() + "," + activestatus + ",'" + foodstat + "','" + orderby.Value + "','" + Bcost.Text + "','" + Tcost.Text + "','" + colorcode.Text + "','" + sum + "')", detail.con);
+                        MySqlCommand cmd = new MySqlCommand("Insert into menu_items(menuname,printname,storeid,menugroup,status,code,orderitem,amount,tax,colorcode,sumAmu,unit) values(?menuname,?printname," + Classes.Stores.SelectedStoreid + "," + groupname.SelectedValue.ToString() + "," + activestatus + ",'" + foodstat + "','" + orderby.Value + "','" + Bcost.Text + "','" + Tcost.Text + "','" + colorcode.Text + "','" + sum + "'," + CmbUnit.SelectedValue.ToString() + ")", detail.con);
                         cmd.Parameters.Add("?menuname", MySqlDbType.VarChar).Value = menuname.Text;
                         cmd.Parameters.Add("?printname", MySqlDbType.VarChar).Value = Code.Text;
                         detail.con.Open();
@@ -244,29 +279,28 @@ namespace WindowsFormsApplication1.P
                         detail.con.Close();
                         menuname.Text = "";
                         Code.Text = "";
-                        Classes.messagemode.messageget(true, "Saved Successfull");    
+                        messagemode.messageget(true, "Saved Successfull");
                     }
                     else if (Update.Checked == true)
                     {
-                        MySqlCommand cmd = new MySqlCommand("Update menu_items set menuname=?menuname,printname=?printname,menugroup='"+groupname.SelectedValue.ToString()+"',status='"+activestatus+"',code='"+foodstat+"',orderitem="+orderby.Value+",amount='"+Bcost.Text+"',tax='"+Tcost.Text+"',colorcode='"+colorcode.Text+"',sumAmu='"+sum+"' where id='"+selectmenuid+"'",detail.con);
+                        MySqlCommand cmd = new MySqlCommand("Update menu_items set menuname=?menuname,printname=?printname,menugroup='" + groupname.SelectedValue.ToString() + "',status='" + activestatus + "',code='" + foodstat + "',orderitem=" + orderby.Value + ",amount='" + Bcost.Text + "',tax='" + Tcost.Text + "',colorcode='" + colorcode.Text + "',sumAmu='" + sum + "',unit=" + CmbUnit.SelectedValue.ToString() + " where id='" + selectmenuid + "'", detail.con);
                         cmd.Parameters.Add("?menuname", MySqlDbType.VarChar).Value = menuname.Text;
                         cmd.Parameters.Add("?printname", MySqlDbType.VarChar).Value = Code.Text;
                         detail.con.Open();
                         cmd.ExecuteNonQuery();
                         detail.con.Close();
-                        Classes.messagemode.messageget(true, "Updated Successfull");
+                        messagemode.messageget(true, "Updated Successfull");
 
                     }
-                    
-                    Classes.MenuMaster.getItemMenu();
+
+                    MenuMaster.getItemMenu();
                     MenuFilter();
                     getPatantmenu();
                 }
                 catch (Exception ex)
                 {
-                    Classes.writeme.errorname(ex);
-                    Classes.messagemode.messageget(false, "Error while saving Information.");
-
+                    writeme.errorname(ex);
+                    messagemode.messageget(false, "Error while saving Information.");
                 }
 
             }
@@ -275,7 +309,7 @@ namespace WindowsFormsApplication1.P
         {
             try
             {
-                DataTable dt = Classes.MenuMaster.menulist;
+                DataTable dt = MenuMaster.menulist;
                 dt.DefaultView.RowFilter = "id=" + id + "";
                 dt = dt.DefaultView.ToTable();
                 menuname.Text = dt.Rows[0][1].ToString();
@@ -300,7 +334,7 @@ namespace WindowsFormsApplication1.P
                 else
                 {
                     radioButton3.Checked = true;
-                
+
                 }
 
 
@@ -316,16 +350,16 @@ namespace WindowsFormsApplication1.P
         {
             try
             {
-               // MessageBox.Show(menulist.SelectedNode.Tag.ToString());
+                // MessageBox.Show(menulist.SelectedNode.Tag.ToString());
                 Update.Checked = true;
                 selectmenuid = int.Parse(menulist.SelectedNode.Tag.ToString());
                 getMenuUpdated(selectmenuid);
-            
+
             }
             catch (Exception ex)
             {
                 Classes.writeme.errorname(ex);
-                Classes.messagemode.messageget(false,"Error while getting information");
+                Classes.messagemode.messageget(false, "Error while getting information");
             }
         }
 
@@ -336,7 +370,7 @@ namespace WindowsFormsApplication1.P
                 int id = int.Parse(menulist.SelectedNode.Tag.ToString());
                 if (Classes.messagemode.confirm("Are you confirm to delete the menu"))
                 {
-                    MySqlCommand cmd = new MySqlCommand("update menu_items set deleteflag=1 where id=" + id + "",detail.con);
+                    MySqlCommand cmd = new MySqlCommand("update menu_items set deleteflag=1 where id=" + id + "", detail.con);
                     detail.con.Open();
                     cmd.ExecuteNonQuery();
                     detail.con.Close();
@@ -357,7 +391,7 @@ namespace WindowsFormsApplication1.P
         {
             selectmenuid = 0;
             menuname.Text = "";
-            Code.Text="";            
+            Code.Text = "";
             Bcost.Text = "0.00";
             Tcost.Text = "0.00";
         }
@@ -403,6 +437,36 @@ namespace WindowsFormsApplication1.P
         {
             MenuGroup gp = new MenuGroup();
             gp.ShowDialog();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CmbProductType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (CmbProductType.SelectedValue.ToString() != string.Empty)
+                {
+                    //MessageBox.Show(CmbProductType.SelectedValue.ToString());
+
+                    //groupname
+                    getMenugroup(int.Parse(CmbProductType.SelectedValue.ToString()));
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // do nothing
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            I.StoreStock Stk = new I.StoreStock(Classes.Stores.SelectedStoreid, Classes.Stores.Selectedstorename);
+            Stk.ShowDialog();
         }
     }
 }

@@ -60,6 +60,11 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.CmbUnit = new System.Windows.Forms.ComboBox();
+            this.CmbProductType = new System.Windows.Forms.ComboBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.orderby)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -77,7 +82,7 @@
             // 
             // menuname
             // 
-            this.menuname.Location = new System.Drawing.Point(240, 41);
+            this.menuname.Location = new System.Drawing.Point(326, 41);
             this.menuname.MaxLength = 30;
             this.menuname.Name = "menuname";
             this.menuname.Size = new System.Drawing.Size(260, 21);
@@ -87,24 +92,26 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(237, 25);
+            this.label2.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(323, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.Size = new System.Drawing.Size(90, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Menu Name*";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(237, 65);
+            this.label3.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(323, 65);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "Menu Code*";
             // 
             // Code
             // 
-            this.Code.Location = new System.Drawing.Point(240, 81);
+            this.Code.Location = new System.Drawing.Point(326, 81);
             this.Code.MaxLength = 16;
             this.Code.Name = "Code";
             this.Code.Size = new System.Drawing.Size(260, 21);
@@ -115,7 +122,7 @@
             // 
             this.groupBox1.Controls.Add(this.radioButton2);
             this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Location = new System.Drawing.Point(240, 105);
+            this.groupBox1.Location = new System.Drawing.Point(326, 105);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(260, 47);
             this.groupBox1.TabIndex = 6;
@@ -129,7 +136,7 @@
             this.radioButton2.ForeColor = System.Drawing.Color.White;
             this.radioButton2.Location = new System.Drawing.Point(69, 20);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(73, 17);
+            this.radioButton2.Size = new System.Drawing.Size(72, 17);
             this.radioButton2.TabIndex = 1;
             this.radioButton2.TabStop = true;
             this.radioButton2.Text = "Non Veg";
@@ -143,7 +150,7 @@
             this.radioButton1.ForeColor = System.Drawing.Color.White;
             this.radioButton1.Location = new System.Drawing.Point(17, 20);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(47, 17);
+            this.radioButton1.Size = new System.Drawing.Size(46, 17);
             this.radioButton1.TabIndex = 0;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Veg";
@@ -153,9 +160,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(240, 157);
+            this.label4.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(326, 195);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 13);
+            this.label4.Size = new System.Drawing.Size(92, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Menu Group*";
             // 
@@ -164,7 +172,7 @@
             this.groupname.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.groupname.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupname.FormattingEnabled = true;
-            this.groupname.Location = new System.Drawing.Point(243, 172);
+            this.groupname.Location = new System.Drawing.Point(329, 210);
             this.groupname.Name = "groupname";
             this.groupname.Size = new System.Drawing.Size(257, 21);
             this.groupname.TabIndex = 8;
@@ -172,15 +180,16 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(240, 197);
+            this.label5.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(326, 235);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(50, 13);
+            this.label5.Size = new System.Drawing.Size(56, 13);
             this.label5.TabIndex = 9;
             this.label5.Text = "Series*";
             // 
             // orderby
             // 
-            this.orderby.Location = new System.Drawing.Point(245, 212);
+            this.orderby.Location = new System.Drawing.Point(331, 250);
             this.orderby.Name = "orderby";
             this.orderby.Size = new System.Drawing.Size(120, 21);
             this.orderby.TabIndex = 10;
@@ -189,7 +198,8 @@
             // 
             this.groupBox2.Controls.Add(this.radioButton3);
             this.groupBox2.Controls.Add(this.radioButton4);
-            this.groupBox2.Location = new System.Drawing.Point(240, 239);
+            this.groupBox2.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(326, 311);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(260, 47);
             this.groupBox2.TabIndex = 11;
@@ -226,7 +236,7 @@
             // 
             // Bcost
             // 
-            this.Bcost.Location = new System.Drawing.Point(240, 308);
+            this.Bcost.Location = new System.Drawing.Point(326, 380);
             this.Bcost.MaxLength = 16;
             this.Bcost.Name = "Bcost";
             this.Bcost.Size = new System.Drawing.Size(100, 21);
@@ -237,24 +247,26 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(242, 292);
+            this.label6.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(326, 364);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(68, 13);
+            this.label6.Size = new System.Drawing.Size(76, 13);
             this.label6.TabIndex = 13;
             this.label6.Text = "Basic(Rs)*";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(242, 333);
+            this.label7.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(326, 405);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 13);
+            this.label7.Size = new System.Drawing.Size(66, 13);
             this.label7.TabIndex = 15;
             this.label7.Text = "Tax(Rs)*";
             // 
             // Tcost
             // 
-            this.Tcost.Location = new System.Drawing.Point(240, 349);
+            this.Tcost.Location = new System.Drawing.Point(326, 421);
             this.Tcost.MaxLength = 16;
             this.Tcost.Name = "Tcost";
             this.Tcost.Size = new System.Drawing.Size(100, 21);
@@ -264,7 +276,7 @@
             // 
             // colorcode
             // 
-            this.colorcode.Location = new System.Drawing.Point(368, 211);
+            this.colorcode.Location = new System.Drawing.Point(454, 249);
             this.colorcode.Name = "colorcode";
             this.colorcode.ReadOnly = true;
             this.colorcode.Size = new System.Drawing.Size(100, 21);
@@ -273,7 +285,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(469, 209);
+            this.button1.Location = new System.Drawing.Point(555, 247);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(31, 23);
             this.button1.TabIndex = 17;
@@ -286,7 +298,7 @@
             this.mnubut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.mnubut.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mnubut.ForeColor = System.Drawing.Color.Yellow;
-            this.mnubut.Location = new System.Drawing.Point(387, 292);
+            this.mnubut.Location = new System.Drawing.Point(473, 364);
             this.mnubut.Name = "mnubut";
             this.mnubut.Size = new System.Drawing.Size(113, 78);
             this.mnubut.TabIndex = 18;
@@ -297,7 +309,7 @@
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(321, 385);
+            this.button2.Location = new System.Drawing.Point(407, 453);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(81, 23);
             this.button2.TabIndex = 19;
@@ -310,7 +322,7 @@
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(8, 425);
+            this.button3.Location = new System.Drawing.Point(5, 482);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(81, 23);
             this.button3.TabIndex = 20;
@@ -323,7 +335,7 @@
             this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(91, 425);
+            this.button4.Location = new System.Drawing.Point(88, 482);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(81, 23);
             this.button4.TabIndex = 21;
@@ -335,13 +347,13 @@
             // 
             this.menulist.Location = new System.Drawing.Point(8, 25);
             this.menulist.Name = "menulist";
-            this.menulist.Size = new System.Drawing.Size(223, 383);
+            this.menulist.Size = new System.Drawing.Size(309, 451);
             this.menulist.TabIndex = 23;
             // 
             // New
             // 
             this.New.AutoSize = true;
-            this.New.Location = new System.Drawing.Point(396, 4);
+            this.New.Location = new System.Drawing.Point(482, 4);
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(49, 17);
             this.New.TabIndex = 24;
@@ -354,7 +366,7 @@
             // 
             this.Update.AutoSize = true;
             this.Update.Enabled = false;
-            this.Update.Location = new System.Drawing.Point(451, 4);
+            this.Update.Location = new System.Drawing.Point(537, 4);
             this.Update.Name = "Update";
             this.Update.Size = new System.Drawing.Size(65, 17);
             this.Update.TabIndex = 25;
@@ -368,7 +380,7 @@
             this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button5.ForeColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(174, 425);
+            this.button5.Location = new System.Drawing.Point(171, 482);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(81, 23);
             this.button5.TabIndex = 26;
@@ -381,7 +393,7 @@
             this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button6.ForeColor = System.Drawing.Color.White;
-            this.button6.Location = new System.Drawing.Point(257, 425);
+            this.button6.Location = new System.Drawing.Point(254, 482);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(95, 23);
             this.button6.TabIndex = 27;
@@ -394,7 +406,7 @@
             this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button7.ForeColor = System.Drawing.Color.White;
-            this.button7.Location = new System.Drawing.Point(358, 425);
+            this.button7.Location = new System.Drawing.Point(351, 482);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(95, 23);
             this.button7.TabIndex = 28;
@@ -402,11 +414,68 @@
             this.button7.UseVisualStyleBackColor = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(326, 155);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(93, 13);
+            this.label8.TabIndex = 29;
+            this.label8.Text = "Product Type";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(323, 272);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(33, 13);
+            this.label9.TabIndex = 31;
+            this.label9.Text = "Unit";
+            // 
+            // CmbUnit
+            // 
+            this.CmbUnit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CmbUnit.FormattingEnabled = true;
+            this.CmbUnit.Location = new System.Drawing.Point(326, 288);
+            this.CmbUnit.Name = "CmbUnit";
+            this.CmbUnit.Size = new System.Drawing.Size(260, 21);
+            this.CmbUnit.TabIndex = 32;
+            // 
+            // CmbProductType
+            // 
+            this.CmbProductType.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CmbProductType.FormattingEnabled = true;
+            this.CmbProductType.Location = new System.Drawing.Point(327, 170);
+            this.CmbProductType.Name = "CmbProductType";
+            this.CmbProductType.Size = new System.Drawing.Size(260, 21);
+            this.CmbProductType.TabIndex = 33;
+            this.CmbProductType.SelectedIndexChanged += new System.EventHandler(this.CmbProductType_SelectedIndexChanged);
+            // 
+            // button8
+            // 
+            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
+            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button8.ForeColor = System.Drawing.Color.White;
+            this.button8.Location = new System.Drawing.Point(448, 482);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(95, 23);
+            this.button8.TabIndex = 34;
+            this.button8.Text = "StoreStock";
+            this.button8.UseVisualStyleBackColor = false;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // MenuItems
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 448);
+            this.ClientSize = new System.Drawing.Size(601, 509);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.CmbProductType);
+            this.Controls.Add(this.CmbUnit);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -440,8 +509,8 @@
             this.Name = "MenuItems";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MenuItems";
-            this.Load += new System.EventHandler(this.MenuItems_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MenuItems_FormClosing);
+            this.Load += new System.EventHandler(this.MenuItems_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.orderby)).EndInit();
@@ -485,5 +554,10 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox CmbUnit;
+        private System.Windows.Forms.ComboBox CmbProductType;
+        private System.Windows.Forms.Button button8;
     }
 }

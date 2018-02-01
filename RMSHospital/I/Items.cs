@@ -22,5 +22,10 @@ namespace WindowsFormsApplication1.I
             this.MaximizeBox = false;
             this.MinimizeBox = false;
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

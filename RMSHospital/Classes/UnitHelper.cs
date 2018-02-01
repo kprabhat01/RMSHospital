@@ -1,14 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data;
-
+using System.Windows.Forms;
 namespace WindowsFormsApplication1.Classes
 {
-    class UnitHelper
+    static class UnitHelper
     {
+        public static void BindDataToComboBox(this ComboBox Cmd, DataTable dt, string DisplayMember, string ValueMember)
+        {
+            try
+            {
+                Cmd.DataSource = dt;
+                Cmd.DisplayMember = DisplayMember;
+                Cmd.ValueMember = ValueMember;
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+            }
+        }
         public static bool InsertUnit(string name)
         {
             try
@@ -87,13 +97,13 @@ namespace WindowsFormsApplication1.Classes
                     MySqlDataReader dr = cmd.ExecuteReader();
                     if (dr.HasRows)
                         dt.Load(dr);
-                    
+
                     detail.con.Close();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception();                
+                throw new Exception();
             }
             return dt;
         }
