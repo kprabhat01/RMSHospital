@@ -7,21 +7,99 @@ using System.Data;
 
 namespace WindowsFormsApplication1.Classes
 {
+    class Inven_Requsition_Items
+    {
+        public int? Id { get; set; }
+        public int? menu_items_id { get; set; }
+        public string Menu_items_productName { get; set; }
+        public decimal? qty { get; set; }
+        public string unit { get; set; }
+    }
+    class Inven_Requsition
+    {
+        public int? ID { get; set; }
+        public int? FrmStoreID { get; set; }
+        public int? ToStoreID { get; set; }
+        public string CDate { get; set; }
+        public string Username { get; set; }
+    }
+    class inven_inwards
+    {
+        public int? Id { get; set; }
+        public int? VendorID { get; set; }
+        public int? StoreID { get; set; }
+        public string CreatedDate { get; set; }
+        public string UserName { get; set; }
+        public string BillNo { get; set; }
+        public string Comment { get; set; }
+    }
+    class inven_inwards_stock
+    {
+        public int? Id { get; set; }
+        public int? Inven_inwards_ID { get; set; }
+        public float? Qty { get; set; }
+        public float? Rate { get; set; }
+        public float? TotalAmount { get; set; }
+        public int? menu_items_id { get; set; }
+    }
+    class Menu_Item_Detail
+    {
+        public int? Id { get; set; }
+        public int? Menu_Item_Id { get; set; }
+        public decimal? stock { get; set; }
+        public int? StoreId { get; set; }
+        public decimal? amount { get; set; }
+        public decimal? tax { get; set; }
+        public decimal? SumAmu { get; set; }
+        public int? status { get; set; }
+        public int? IndexCount { get; set; }
+        public string ColorCode { get; set; }
+    }
+    class Inven_Logs
+    {
+        public int? Id { get; set; }
+        public int? menu_items_Id { get; set; }
+        public string menu_item_name { get; set; }
+        public int? DebitType { get; set; }
+        public decimal? Credit { get; set; }
+        public decimal? Debit { get; set; }
+        public decimal? LastQty { get; set; }
+        public decimal? CurrentQty { get; set; }
+        public string dateTime { get; set; }
+        public string Username { get; set; }
+        public string LogMode { get; set; }
+        public int? StoreID { get; set; }
+    }
+    class inven_inwards_vendoraccount
+    {
+        public int? Id { get; set; }
+        public int? Inven_inwards_ID { get; set; }
+        public int? VendorId { get; set; }
+        public decimal? DebitAmount { get; set; }
+        public decimal? CreditAmount { get; set; }
+        public decimal? OpeningBalance { get; set; }
+        public decimal? ClosingBalance { get; set; }
+        public string username { get; set; }
+        public int? PaymentMode { get; set; }
+        public string Comment { get; set; }
+
+    }
+
     class Inventory
     {
-        //StoreSideDataTable
-
+        //StoreSideDataTable       
 
         public Inventory()
         {
             stockInwards = new DataTable();
-            stockInwards.Columns.Add("Product ID", typeof(int));
-            stockInwards.Columns.Add("Product Name", typeof(string));
+            stockInwards.Columns.Add("ProductID", typeof(int));
+            stockInwards.Columns.Add("ProductName", typeof(string));
             stockInwards.Columns.Add("Qty", typeof(decimal));
             stockInwards.Columns.Add("Rate", typeof(decimal));
             stockInwards.Columns.Add("Total", typeof(decimal));
-            stockInwards.Columns.Add("Vendor ID", typeof(int));
+            stockInwards.Columns.Add("VendorID", typeof(int));
         }
+
 
         public DataTable stockInwards;
 
@@ -30,8 +108,9 @@ namespace WindowsFormsApplication1.Classes
         // After adding list to the gridview 
         public static DataTable stocklist;
         // Store Side stock for the Datadetails.
-
+        private DataTable TempInventoryStock;
         public DataTable getStoreDataMember;
+
         public static void getUnits()
         {
             try
@@ -196,7 +275,9 @@ namespace WindowsFormsApplication1.Classes
         {
             try
             {
-                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT storestock.itemid,storestock.cur_stock,storestock.lastupdate,unit.name,Inventory_items.productname,storestock.id FROM storestock,Inventory_items,unit WHERE storestock.itemid = Inventory_items.id AND Inventory_items.units = unit.id and storestock.storeid=" + storeid + "", detail.con))
+                using (MySqlDataAdapter da = new MySqlDataAdapter(@"SELECT menu_items.id,menu_items.menuname AS Item,pro_catagories.name AS 'Sub-Categories',pro_inventory_cat.catname AS Categories,Menu_Item_Detail.stock AS Qty,unit.name AS Unit,Menu_Item_Detail.id as 'MenuMapId' 
+                        FROM unit, pro_inventory_cat, menu_items, pro_catagories, Menu_Item_Detail WHERE menu_items.id = Menu_Item_Detail.menu_item_id AND menu_items.unit = unit.id AND menu_items.deleteflag= 0
+                        AND menu_items.menugroup = pro_catagories.id AND pro_catagories.pro_inventory_cat_id = pro_inventory_cat.id AND Menu_Item_Detail.storeid = " + storeid + "", detail.con))
                 {
                     stocklist = new DataTable();
                     detail.con.Open();
@@ -208,6 +289,11 @@ namespace WindowsFormsApplication1.Classes
             {
                 writeme.errorname(ex);
                 return;
+            }
+            finally
+            {
+                if (detail.con.State == ConnectionState.Open)
+                    detail.con.Close();
             }
         }
         public static bool InsertDependent(int menuMapId, int menuid, float qty)
@@ -456,6 +542,49 @@ namespace WindowsFormsApplication1.Classes
                 return;
             }
         }
+
+
+        private bool ManageInventory(DataTable dt, int SelectedStoreID, MySqlConnection SqlCon, MySqlTransaction Trs)
+        {
+
+            try
+            {
+                TempInventoryStock = new DataTable();
+                TempInventoryStock = SqlHelper.ReturnRows(@"SELECT menu_items.id,menu_items.menuname AS Item,pro_catagories.name AS 'Sub-Categories',pro_inventory_cat.catname AS Categories,Menu_Item_Detail.stock AS Qty,unit.name AS Unit 
+                        FROM unit, pro_inventory_cat, menu_items, pro_catagories, Menu_Item_Detail WHERE menu_items.id = Menu_Item_Detail.menu_item_id AND menu_items.unit = unit.id AND menu_items.deleteflag= 0
+                        AND menu_items.menugroup = pro_catagories.id AND pro_catagories.pro_inventory_cat_id = pro_inventory_cat.id AND Menu_Item_Detail.storeid = " + SelectedStoreID + "");
+                List<Inven_Logs> Lst = new List<Inven_Logs>();
+                foreach (DataRow TempDr in dt.Rows)
+                {
+                    Lst.Add(new Inven_Logs
+                    {
+                        StoreID = SelectedStoreID,
+                        Credit = decimal.Parse(TempDr["Qty"].ToString()),
+                        DebitType = 0,
+                        menu_items_Id = int.Parse(TempDr["itemid"].ToString()),
+                        menu_item_name = TempDr["ItemName"].ToString(),
+                        Username = loginmodule.username,
+                        LogMode = "Sell",
+                        LastQty = decimal.Parse(TempInventoryStock.Select("id=" + TempDr["itemid"].ToString() + "")[0]["Qty"].ToString()),
+                        CurrentQty = decimal.Parse(TempInventoryStock.Select("id=" + TempDr["itemid"].ToString() + "")[0]["Qty"].ToString()) - decimal.Parse(TempDr["Qty"].ToString()),
+                    });
+                }
+                if (Lst.SaveChanges(SqlCon, Trs))
+                {
+
+
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+                return false;
+            }
+        }
+
+
+
         // End of the method
     }
 }

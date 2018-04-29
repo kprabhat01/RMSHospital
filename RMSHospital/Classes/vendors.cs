@@ -24,7 +24,25 @@ namespace WindowsFormsApplication1.Classes
 
         //
 
-
+        public static DataTable GetOpeningBalance(int VendorID, MySqlConnection SqlCon)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (MySqlCommand Cmd = new MySqlCommand("SP_VendorAccount_openingBalance", SqlCon))
+                {
+                    Cmd.Parameters.Add("IvendorID", MySqlDbType.Int64).Value = VendorID;
+                    Cmd.CommandType = CommandType.StoredProcedure;
+                    MySqlDataAdapter da = new MySqlDataAdapter(Cmd);
+                    da.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+            }
+            return dt;
+        }
         public static bool VendorManage(int venflag, string vendorname, string email, string contact, string comment, int stat)
         {
             MySqlCommand cmd;
@@ -93,6 +111,21 @@ namespace WindowsFormsApplication1.Classes
                 writeme.errorname(ex);
                 return false;
             }
+        }
+        public static DataTable vendor_CurrentAccount(int vendorId, string FrmDate, string ToDate, DataTable dt = null)
+        {
+            try
+            {
+                dt = new DataTable();
+                dt = SqlHelper.ReturnRows(@"select id, Inven_inwards_id,Datetime,username,Comment, DebitAmount,CreditAmount from inven_inwards_vendoraccount where 
+                                            vendorid =" + vendorId + " and date(datetime) between '" + FrmDate + "' and '" + ToDate + "'");
+                    
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+            }
+            return dt;
         }
 
     }

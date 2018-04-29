@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MetroFramework;
+using MetroFramework.Forms;
 
 namespace WindowsFormsApplication1.Classes
 {
@@ -30,6 +32,10 @@ namespace WindowsFormsApplication1.Classes
             {
                 return false;
             }  
+        }
+        public static void MetroMessageBox(string Message,Form obj,bool Status)
+        {
+            MetroFramework.MetroMessageBox.Show(obj, "\n"+Message, "Freelancer Software Developer", MessageBoxButtons.OK, Status?MessageBoxIcon.Information:MessageBoxIcon.Error);
         }
     } 
 

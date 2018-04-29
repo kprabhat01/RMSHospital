@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             UserManagement.GetUsers();
-            Application.Run(new lightlogin());
+            Application.Run(new RMSLogin());
         }
     }
 }

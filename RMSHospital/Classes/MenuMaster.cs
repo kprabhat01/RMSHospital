@@ -20,6 +20,28 @@ namespace WindowsFormsApplication1.Classes
         public int deleteflag { get; set; }
         public int pro_inventory_cat_Id { get; set; }
     }
+    class menu_items
+    {
+        public int? Id { get; set; }
+        public int? menugroup { get; set; }
+        public int? deleteflag { get; set; }
+        public string code { get; set; }
+        public int? unit { get; set; }
+        public string Username { get; set; }
+        public string Cdate { get; set; }
+        public string MenuName { get; set; }
+        public string PrintName { get; set; }
+        public int? ForSale { get; set; }
+    }
+    class menu_items_dependency
+    {
+        public int? id { get; set; }
+        public int? StoreID { get; set; }
+        public int? MenuID { get; set; }
+        public int? MenuMappedId { get; set; }
+        public int? DependencyType { get; set; }
+        public decimal? Qty { get; set; }
+    }
     class MenuMaster
     {
 
@@ -31,6 +53,7 @@ namespace WindowsFormsApplication1.Classes
         public static string storename, printname, phone1, phone2, address;
         //
         public static DataTable MenuGropTitle;
+        public static DataTable MenuDependency;
 
         public static void getMenuGroup()
         {
@@ -51,8 +74,20 @@ namespace WindowsFormsApplication1.Classes
             }
 
         }
+        public static void DataMenuDependency()
+        {
 
-
+            try
+            {
+                List<menu_items_dependency> lst = new List<menu_items_dependency>();
+                MenuDependency = new DataTable();
+                MenuDependency = lst.ReturnRow();
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+            }
+        }
 
         public static void getStoreInfo()
         {
@@ -93,7 +128,14 @@ namespace WindowsFormsApplication1.Classes
         {
             try
             {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM menu_items WHERE deleteflag=0", detail.con);
+                MySqlDataAdapter da = new MySqlDataAdapter(@"
+SELECT menu_items.id,menu_items.menugroup,pro_catagories.pro_inventory_cat_id,
+menu_items.code,menu_items.unit,Menu_Item_Detail.menu_item_id,menu_items.MenuName,
+menu_items.printname,Menu_Item_Detail.storeid,Menu_Item_Detail.stock,Menu_Item_Detail.amount,
+Menu_Item_Detail.tax,Menu_Item_Detail.sumAmu,Menu_Item_Detail.status,Menu_Item_Detail.indexcount,
+Menu_Item_Detail.colorCode,menu_items.ForSale,stores.storename FROM menu_items,Menu_Item_Detail,pro_catagories,stores WHERE 
+menu_items.deleteflag=0 AND menu_items.id =Menu_Item_Detail.Menu_Item_Id AND 
+pro_catagories.id = menu_items.menugroup AND stores.id = Menu_Item_Detail.storeid ", detail.con);
                 menulist = new DataTable();
                 detail.con.Open();
                 da.Fill(menulist);
@@ -110,7 +152,7 @@ namespace WindowsFormsApplication1.Classes
         {
             try
             {
-                MySqlCommand cmd = new MySqlCommand("Inventory_menu_map",detail.con);
+                MySqlCommand cmd = new MySqlCommand("Inventory_menu_map", detail.con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 detail.con.Open();
                 cmd.ExecuteNonQuery();
@@ -121,7 +163,7 @@ namespace WindowsFormsApplication1.Classes
                 writeme.errorname(ex);
             }
         }
-        
+
 
     }
 }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Data;
-using MySql.Data.MySqlClient;
 using System.Diagnostics;
+using System.IO;
 
 namespace WindowsFormsApplication1.Classes
 {
@@ -20,10 +16,7 @@ namespace WindowsFormsApplication1.Classes
             DataTable dt = new DataTable();
             try
             {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT stores.printname,stores.phone1,stores.phone2,stores.address,order_detail.id,order_detail.orderdatetime,order_detail.username,order_detail.overall_amu,order_detail.discount,order_detail.paidamu,order_detail.Add_comment,order_detail.AmountGiven,order_detail.AmountRefund,order_detail.tableid,order_detail.AttenName FROM order_detail,stores WHERE order_detail.storeid = stores.id  AND order_detail.id=" + orderid + "", detail.con);
-                detail.con.Open();
-                da.Fill(dt);
-                detail.con.Close();
+                dt = SqlHelper.ReturnRows("SELECT stores.printname,stores.phone1,stores.phone2,stores.address,order_detail.id,order_detail.orderdatetime,order_detail.username,order_detail.overall_amu,order_detail.discount,order_detail.paidamu,order_detail.Add_comment,order_detail.AmountGiven,order_detail.AmountRefund,order_detail.tableid,order_detail.AttenName FROM order_detail,stores WHERE order_detail.storeid = stores.id  AND order_detail.id=" + orderid + "");
             }
             catch (Exception ex)
             {
@@ -36,10 +29,8 @@ namespace WindowsFormsApplication1.Classes
             DataTable dt = new DataTable();
             try
             {
-                MySqlDataAdapter da = new MySqlDataAdapter("SELECT menu_items.printname AS PrintName,order_items.qty AS Qty,order_items.comment AS COMMENT, order_items.oamu AS Amount FROM order_items,menu_items WHERE menu_items.id = order_items.menuid AND order_items.orderid=" + orderid + "", detail.con);
-                detail.con.Open();
-                da.Fill(dt);
-                detail.con.Close();
+                dt = SqlHelper.ReturnRows("SELECT menu_items.printname AS PrintName,order_items.qty AS Qty,order_items.comment AS COMMENT, order_items.oamu AS Amount FROM order_items,menu_items WHERE menu_items.id = order_items.menuid AND order_items.orderid=" + orderid + "");
+
             }
             catch (Exception e)
             {
@@ -77,12 +68,7 @@ namespace WindowsFormsApplication1.Classes
             DataTable dt = new DataTable();
             try
             {
-                using (MySqlDataAdapter da = new MySqlDataAdapter("select * from order_tax where orderid=" + orderid + "", detail.con))
-                {
-                    detail.con.Open();
-                    da.Fill(dt);
-                    detail.con.Close();
-                }
+                dt = SqlHelper.ReturnRows("select * from order_tax where orderid=" + orderid + "");
             }
             catch (Exception ex)
             {

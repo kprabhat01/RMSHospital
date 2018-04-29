@@ -26,27 +26,35 @@ namespace WindowsFormsApplication1.Classes
             OrderMode.getPayments();
             OrderMode.getOrderMode();
             MenuMaster.getMenuGroup();
+            MenuMaster.DataMenuDependency();
+            loginmodule.GetUser();
 
         }
 
         public static DataTable ReturnRows(string query)
         {
             DataTable dt = new DataTable();
+            MySqlConnection SqlCon = detail.NewMysql;
             try
             {
-                using (MySqlCommand cmd = new MySqlCommand(query, detail.con))
+                using (MySqlCommand cmd = new MySqlCommand(query, SqlCon))
                 {
-                    detail.con.Open();
+                    SqlCon.Open();
                     MySqlDataReader rd = cmd.ExecuteReader();
                     if (rd.HasRows)
                         dt.Load(rd);
 
-                    detail.con.Close();
+
                 }
             }
             catch (Exception ex)
             {
                 writeme.errorname(ex);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open)
+                    SqlCon.Close();
             }
             return dt;
         }
@@ -134,8 +142,8 @@ namespace WindowsFormsApplication1.Classes
                             Query.Append(ClassTab.GetProperties()[i].Name + ",");
                         Query.Remove(Query.Length - 1, 1);
                     }
-                    if (Selected.Count >= 1)
-                        Query.Append(" from " + ClassTab.Name + " where Id is not null");
+                    //if (Selected.Count >= 1)
+                    Query.Append(" from " + ClassTab.Name + " where Id is not null");
                     for (int z = 0; z < Selected.Count; z++)
                     {
                         for (int i = 0; i < ClassTab.GetProperties().Count(); i++)
@@ -218,6 +226,56 @@ namespace WindowsFormsApplication1.Classes
             return Entry;
         }
 
+
+
+        public static bool SaveChanges<T>(this List<T> Obj, MySqlConnection SqlSetCon, MySqlTransaction Tr, bool Entry = false)
+        {
+            try
+            {
+                MySqlCommand Cmd;
+                StringBuilder Query = new StringBuilder();
+                Type ClassTab = typeof(T);
+                Query.AppendLine("Insert into " + ClassTab.Name + " ( ");
+                for (int i = 0; i < ClassTab.GetProperties().Count(); i++)
+                {
+                    if (ClassTab.GetProperties()[i].Name.ToLower() == "id") continue;
+                    Query.AppendLine(ClassTab.GetProperties()[i].Name + ",");
+                }
+                Query.Remove(Query.Length - 3, 3);
+                Query.AppendLine(" ) values ");
+                for (int i = 0; i < Obj.Count; i++)
+                {
+                    Query.Append(" (");
+                    for (int z = 0; z < ClassTab.GetProperties().Count(); z++)
+                    {
+                        if (ClassTab.GetProperties()[z].Name.ToLower() == "id") continue;
+                        Query.AppendLine("?" + ClassTab.GetProperties()[z].Name + i + ",");
+                    }
+                    Query.Remove(Query.Length - 3, 3);
+                    Query.Append("),");
+                }
+                Query.Remove(Query.Length - 1, 1);
+
+                Cmd = new MySqlCommand(Query.ToString(), SqlSetCon, Tr);
+                for (int z = 0; z < Obj.Count; z++)
+                    for (int i = 0; i < ClassTab.GetProperties().Count(); i++)
+                    {
+                        if (ClassTab.GetProperties()[i].Name.ToLower() == "id") continue;
+                        Cmd.Parameters.Add("?" + ClassTab.GetProperties()[i].Name + z, MySqlDbType.VarChar).Value = ClassTab.GetProperties()[i].GetValue(Obj[z]);
+                    }
+
+                Cmd.ExecuteNonQuery();
+
+                Entry = true;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return Entry;
+        }
+
         public static bool UpdateChanges<T>(this List<T> obj, bool Return = false)
         {
             try
@@ -269,6 +327,56 @@ namespace WindowsFormsApplication1.Classes
 
             return Return;
         }
+
+        public static bool UpdateChanges<T>(this List<T> obj, MySqlConnection SqlSetCon, MySqlTransaction Tr, bool Return = false)
+        {
+            try
+            {
+                MySqlCommand Cmd;
+                StringBuilder Query = new StringBuilder();
+                Type ClassTab = typeof(T);
+                Query.Append("Update " + ClassTab.Name + " set ");
+                for (int z = 0; z < obj.Count; z++)
+                {
+                    for (int i = 0; i < ClassTab.GetProperties().Count(); i++)
+                    {
+                        if (ClassTab.GetProperties()[i].GetValue(obj[z]) != null && ClassTab.GetProperties()[i].Name.ToLower() != "id")
+                        {
+                            Query.Append(ClassTab.GetProperties()[i].Name + "=?" + ClassTab.GetProperties()[i].Name + z + ",");
+                        }
+                    }
+                }
+                Query.Remove(Query.Length - 1, 1);
+                Query.Append(" Where Id=?Id");
+                Cmd = new MySqlCommand(Query.ToString(), SqlSetCon, Tr);
+                for (int z = 0; z < obj.Count; z++)
+                {
+                    for (int i = 0; i < ClassTab.GetProperties().Count(); i++)
+                    {
+                        if (ClassTab.GetProperties()[i].GetValue(obj[z]) != null)
+                        {
+                            if (ClassTab.GetProperties()[i].Name.ToString().ToLower() == "id")
+                                Cmd.Parameters.Add("?Id", MySqlDbType.VarChar).Value = ClassTab.GetProperties()[i].GetValue(obj[z]);
+                            else if (ClassTab.GetProperties()[i].GetValue(obj[z]) != null)
+                                Cmd.Parameters.Add("?" + ClassTab.GetProperties()[i].Name + z, MySqlDbType.VarChar).Value = ClassTab.GetProperties()[i].GetValue(obj[z]);
+                        }
+                    }
+                }
+
+                Cmd.ExecuteNonQuery();
+
+                Return = true;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return Return;
+        }
+
         public static bool DeleteChanges<T>(this List<T> Obj, bool Return = false)
         {
             try
@@ -303,6 +411,7 @@ namespace WindowsFormsApplication1.Classes
                         SqlCon.Open();
                         Cmd.ExecuteNonQuery();
                         SqlCon.Close();
+                        Return = true;
                     }
                 }
 

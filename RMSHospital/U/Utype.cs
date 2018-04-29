@@ -23,7 +23,7 @@ namespace WindowsFormsApplication1.U
             this.Text = "Select Store";
             
             // Setting user type 
-            listBox1.DataSource = Classes.UserManagement.datata;
+            listBox1.DataSource = Classes.UserManagement.UserType;
             listBox1.ValueMember = "id";
             listBox1.DisplayMember = "type";
 

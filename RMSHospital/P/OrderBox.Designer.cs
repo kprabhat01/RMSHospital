@@ -33,7 +33,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.MenuGridview = new System.Windows.Forms.DataGridView();
-            this.OrderTemp = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.TotalSumDisplay = new System.Windows.Forms.Label();
@@ -58,6 +57,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.orderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageOrdersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToLooseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.currentStockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disamu = new System.Windows.Forms.TextBox();
             this.Discount = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -66,11 +68,12 @@
             this.label15 = new System.Windows.Forms.Label();
             this.CmbAttendent = new System.Windows.Forms.ComboBox();
             this.PanelAttendent = new System.Windows.Forms.Panel();
+            this.OrderTemp = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.MenuGridview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrderTemp)).BeginInit();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.PanelAttendent.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OrderTemp)).BeginInit();
             this.SuspendLayout();
             // 
             // ItemName
@@ -119,18 +122,6 @@
             this.MenuGridview.Size = new System.Drawing.Size(300, 300);
             this.MenuGridview.TabIndex = 4;
             this.MenuGridview.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MenuGridview_KeyDown);
-            // 
-            // OrderTemp
-            // 
-            this.OrderTemp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.OrderTemp.Location = new System.Drawing.Point(357, 125);
-            this.OrderTemp.Name = "OrderTemp";
-            this.OrderTemp.ReadOnly = true;
-            this.OrderTemp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.OrderTemp.Size = new System.Drawing.Size(439, 300);
-            this.OrderTemp.TabIndex = 5;
-            this.OrderTemp.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.OrderTemp_RowsRemoved);
-            this.OrderTemp.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OrderTemp_KeyDown);
             // 
             // panel1
             // 
@@ -358,7 +349,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.orderToolStripMenuItem});
+            this.orderToolStripMenuItem,
+            this.stockToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -368,7 +360,8 @@
             // orderToolStripMenuItem
             // 
             this.orderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageOrdersToolStripMenuItem});
+            this.manageOrdersToolStripMenuItem,
+            this.addToLooseToolStripMenuItem});
             this.orderToolStripMenuItem.Name = "orderToolStripMenuItem";
             this.orderToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
             this.orderToolStripMenuItem.Text = "Order";
@@ -379,6 +372,28 @@
             this.manageOrdersToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.manageOrdersToolStripMenuItem.Text = "Manage Orders";
             this.manageOrdersToolStripMenuItem.Click += new System.EventHandler(this.manageOrdersToolStripMenuItem_Click);
+            // 
+            // addToLooseToolStripMenuItem
+            // 
+            this.addToLooseToolStripMenuItem.Name = "addToLooseToolStripMenuItem";
+            this.addToLooseToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.addToLooseToolStripMenuItem.Text = "Add To Loose (Ctrl + L)";
+            this.addToLooseToolStripMenuItem.Click += new System.EventHandler(this.addToLooseToolStripMenuItem_Click);
+            // 
+            // stockToolStripMenuItem
+            // 
+            this.stockToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.currentStockToolStripMenuItem});
+            this.stockToolStripMenuItem.Name = "stockToolStripMenuItem";
+            this.stockToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.stockToolStripMenuItem.Text = "Stock";
+            // 
+            // currentStockToolStripMenuItem
+            // 
+            this.currentStockToolStripMenuItem.Name = "currentStockToolStripMenuItem";
+            this.currentStockToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.currentStockToolStripMenuItem.Text = "Current Stock (Ctrl+C)";
+            this.currentStockToolStripMenuItem.Click += new System.EventHandler(this.currentStockToolStripMenuItem_Click_1);
             // 
             // disamu
             // 
@@ -462,11 +477,22 @@
             this.PanelAttendent.Size = new System.Drawing.Size(203, 29);
             this.PanelAttendent.TabIndex = 47;
             // 
+            // OrderTemp
+            // 
+            this.OrderTemp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.OrderTemp.Location = new System.Drawing.Point(358, 130);
+            this.OrderTemp.Name = "OrderTemp";
+            this.OrderTemp.ReadOnly = true;
+            this.OrderTemp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.OrderTemp.Size = new System.Drawing.Size(438, 295);
+            this.OrderTemp.TabIndex = 48;
+            // 
             // OrderBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 516);
+            this.Controls.Add(this.OrderTemp);
             this.Controls.Add(this.printbill);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label14);
@@ -491,7 +517,6 @@
             this.Controls.Add(this.TblNo);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.OrderTemp);
             this.Controls.Add(this.MenuGridview);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -507,13 +532,13 @@
             this.Load += new System.EventHandler(this.OrderBox_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OrderBox_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.MenuGridview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.OrderTemp)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.PanelAttendent.ResumeLayout(false);
             this.PanelAttendent.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OrderTemp)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -526,7 +551,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView MenuGridview;
-        private System.Windows.Forms.DataGridView OrderTemp;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label TotalSumDisplay;
         private System.Windows.Forms.Label label4;
@@ -559,5 +583,9 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.ComboBox CmbAttendent;
         private System.Windows.Forms.Panel PanelAttendent;
+        private System.Windows.Forms.ToolStripMenuItem addToLooseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stockToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem currentStockToolStripMenuItem;
+        private System.Windows.Forms.DataGridView OrderTemp;
     }
 }

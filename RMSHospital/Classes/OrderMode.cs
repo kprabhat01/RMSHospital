@@ -86,7 +86,7 @@ namespace WindowsFormsApplication1.Classes
 
         }
 
-        public static int orderPlace(int storeid, decimal amount, decimal tax, decimal tamu, int stat, decimal ovamount, string tabid, int paymode, int credit, int custid, decimal amountgiven, decimal amountRefund, string addcomment, decimal discount, decimal paidAmu, decimal creditValue,string Attname)
+        public static int orderPlace(int storeid, decimal amount, decimal tax, decimal tamu, int stat, decimal ovamount, string tabid, int paymode, int credit, int custid, decimal amountgiven, decimal amountRefund, string addcomment, decimal discount, decimal paidAmu, decimal creditValue, string Attname)
         {
             int orderid = 0;
             string datedetail = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -132,6 +132,10 @@ namespace WindowsFormsApplication1.Classes
                     cmd.ExecuteNonQuery();
                     detail.con.Close();
                     InsertTax(dt, orderid);
+                    if (detail.con.State == ConnectionState.Open)
+                        detail.con.Close();
+                    MySqlTransaction Trsn = null;
+                    SetInventorySummary(orderid, Stores.SelectedStoreid, detail.con, Trsn);
                     return true;
                 }
             }
@@ -141,6 +145,8 @@ namespace WindowsFormsApplication1.Classes
                 return false;
             }
         }
+
+
         public static void InsertTax(DataTable dt, int orderid)
         {
             try
@@ -240,6 +246,78 @@ namespace WindowsFormsApplication1.Classes
                 return;
             }
 
+        }
+        private static DataTable OrderItemMappedValue(int IStoreid, int IOrderID, int IDependencyType, DataTable Dt = null)
+        {
+            try
+            {
+                Dt = new DataTable();
+                MySqlCommand cmd = new MySqlCommand("SP_StoreInventoryMapped", detail.con);
+                cmd.Parameters.Add("IstoreID", MySqlDbType.Int64).Value = IStoreid;
+                cmd.Parameters.Add("IOrderId", MySqlDbType.Int64).Value = IOrderID;
+                cmd.Parameters.Add("DependencyType", MySqlDbType.Int64).Value = IDependencyType;
+                cmd.CommandType = CommandType.StoredProcedure;
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                detail.con.Open();
+                da.Fill(Dt);
+                detail.con.Close();
+
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+            }
+            return Dt;
+
+        }
+        public static void SetInventorySummary(int OrderID, int IstoreID, MySqlConnection SqlCon, MySqlTransaction Trsn)
+        {
+            try
+            {
+                DataTable StoreStock = SqlHelper.ReturnRows(@"SELECT Menu_Item_Detail.id, menu_items.id as MID,menu_items.menuname AS Item,pro_catagories.name AS 'Sub-Categories',pro_inventory_cat.catname AS Categories,Menu_Item_Detail.stock AS Qty,unit.name AS Unit 
+                        FROM unit, pro_inventory_cat, menu_items, pro_catagories, Menu_Item_Detail WHERE menu_items.id = Menu_Item_Detail.menu_item_id AND menu_items.unit = unit.id AND menu_items.deleteflag= 0
+                        AND menu_items.menugroup = pro_catagories.id AND pro_catagories.pro_inventory_cat_id = pro_inventory_cat.id AND Menu_Item_Detail.storeid = " + IstoreID + "");
+                DataTable StoreSideSellStore = OrderItemMappedValue(IstoreID, OrderID, 0);
+                List<Inven_Logs> Logs = new List<Inven_Logs>();
+                List<Menu_Item_Detail> Item = new List<Menu_Item_Detail>();
+                SqlCon.Open();
+                Trsn = SqlCon.BeginTransaction();
+                foreach (DataRow Dr in StoreSideSellStore.Rows)
+                {
+                    Logs.Add(new Inven_Logs
+                    {
+                        menu_items_Id = int.Parse(Dr["MenuID"].ToString()),
+                        menu_item_name = Dr["MenuName"].ToString(),
+                        Credit = Decimal.Parse(Dr["Qty"].ToString().Replace("-", "")),
+                        DebitType = 0,
+                        LogMode = "Sell (Order ID=" + OrderID + ")",
+                        StoreID = IstoreID,
+                        Username = loginmodule.username,
+                        LastQty = decimal.Parse(StoreStock.Select("MID=" + Dr["MenuID"].ToString() + "")[0]["Qty"].ToString()),
+                        CurrentQty = decimal.Parse(StoreStock.Select("MID=" + Dr["MenuID"].ToString() + "")[0]["Qty"].ToString()) + (Decimal.Parse(Dr["Qty"].ToString())),
+                    });
+                    Item.Clear();
+                    Item.Add(new Menu_Item_Detail
+                    {
+                        stock = decimal.Parse(StoreStock.Select("MID=" + Dr["MenuID"].ToString() + "")[0]["Qty"].ToString()) + (Decimal.Parse(Dr["Qty"].ToString())),
+                        Id = int.Parse(StoreStock.Select("MID=" + Dr["MenuID"].ToString() + "")[0]["Id"].ToString())
+                    });
+                    if (!Item.UpdateChanges(SqlCon, Trsn))
+                    {
+                        Trsn.Rollback();
+                        break;
+                    }
+                }
+                if (Logs.SaveChanges(SqlCon, Trsn))
+                    Trsn.Commit();
+                else
+                    Trsn.Rollback();
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+                Trsn.Rollback();
+            }
         }
 
     }

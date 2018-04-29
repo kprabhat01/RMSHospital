@@ -7,14 +7,44 @@ using System.Data;
 
 namespace WindowsFormsApplication1.Classes
 {
+    class users
+    {
+        public int? Id { get; set; }
+        public string ufname { get; set; }
+        public string ulname { get; set; }
+        public string pwd { get; set; }
+        public string uname { get; set; }
+        public int? utype { get; set; }
+        public int? status { get; set; }
+        public int? ublk { get; set; }
+        public int? deleteflag { get; set; }
+    }
+    class sec_userprofile
+    {
+        private int? Id { get; set; }
+        public int? mid { get; set; }
+        public int? utype { get; set; }
+
+    }
     class loginmodule
     {
 
         public static DataTable logininfo;
+        public static DataTable UserList;
         public static string username;
         public static int uid;
         public static int utype;
 
+        public static void GetUser()
+        {
+            UserList = new DataTable();
+            List<users> UsrLst = new List<users>();
+            UsrLst.Add(new users
+            {
+                deleteflag = 0
+            });
+            UserList = UsrLst.ReturnRow();
+        }
         public static Boolean validatelogin(string uname, string pcode)
         {
             Boolean test = false;

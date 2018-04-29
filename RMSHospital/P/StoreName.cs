@@ -15,6 +15,7 @@ namespace WindowsFormsApplication1.P
         {
             InitializeComponent();
             this.ShowInTaskbar = false;
+
         }
 
         private void StoreName_Load(object sender, EventArgs e)

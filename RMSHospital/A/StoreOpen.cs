@@ -33,6 +33,7 @@ namespace WindowsFormsApplication1.A
             {
                 dataGridView1.DataSource = Classes.OpenDay.getOpenStores();
                 dataGridView1.Columns[0].Visible = false;
+                dataGridView1.Columns[1].Visible = false;
                 dataGridView1.AllowUserToAddRows = false;
                 dataGridView1.AllowUserToResizeColumns = false;
                 dataGridView1.CellBorderStyle = DataGridViewCellBorderStyle.None;
@@ -68,12 +69,13 @@ namespace WindowsFormsApplication1.A
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int storeid;
+            int storeid,LogId;
             string date;
             try
             {
-                storeid = int.Parse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
-                date = DateTime.Parse(dataGridView1.SelectedRows[0].Cells[2].Value.ToString()).ToString("yyyy-MM-dd");
+                LogId = int.Parse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+                storeid = int.Parse(dataGridView1.SelectedRows[0].Cells[1].Value.ToString());
+                date = DateTime.Parse(dataGridView1.SelectedRows[0].Cells[3].Value.ToString()).ToString("yyyy-MM-dd");
             }
             catch (Exception ex)
             {
@@ -84,7 +86,7 @@ namespace WindowsFormsApplication1.A
             {
                 if (Classes.messagemode.confirm("Are you sure to close the store ? This will close the application once done."))
                 {
-                    if (Classes.DayEndStatement.closeDay(storeid, date))
+                    if (Classes.DayEndStatement.closeDay(LogId,storeid, date))
                     {
                         Application.Exit();
                     }
@@ -93,7 +95,7 @@ namespace WindowsFormsApplication1.A
             }
             catch (Exception ex)
             {
-                Classes.messagemode.messageget(false,"Error while closing the day");
+                Classes.messagemode.messageget(false, "Error while closing the day");
                 Classes.writeme.errorname(ex);
                 return;
             }

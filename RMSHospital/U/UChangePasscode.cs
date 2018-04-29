@@ -1,47 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WindowsFormsApplication1.U
 {
-    public partial class UChangePasscode : Form
+    public partial class UChangePasscode : MetroFramework.Forms.MetroForm
     {
-        
-        public UChangePasscode()
+        private int Userid { get; set; }
+
+        public UChangePasscode(int IUserId, string IUsername)
         {
             InitializeComponent();
+            this.Text = IUsername;
+            
+            
         }
-        
 
         private void UChangePasscode_Load(object sender, EventArgs e)
         {
             this.MinimizeBox = false;
             this.MaximizeBox = false;
-            this.Text = Classes.UserManagement.username;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+
+
+        }
+
+        private void btnChangePasscode_Click(object sender, EventArgs e)
+        {
             if (passcode.Text.Length == 0 || repasscode.Text.Length == 0)
             {
-                Classes.messagemode.messageget(false,"Please enter Password and Confirm Password.");
+                Classes.messagemode.MetroMessageBox("Please enter Password and Confirm Password.", this, false);
                 return;
             }
             else if (passcode.Text != repasscode.Text)
             {
-                Classes.messagemode.messageget(false, "Password doesn't match with confirm password.");
+                Classes.messagemode.MetroMessageBox("Password doesn't match with confirm password.", this, false);
                 return;
             }
-            else {
+            else
+            {
 
-                if (Classes.UserManagement.changepassword(Classes.UserManagement.userid, passcode.Text))
+                if (Classes.UserManagement.changepassword(Userid, passcode.Text))
                 {
-                    Classes.messagemode.messageget(true, "Password has been changed Successfully.");
+                    Classes.messagemode.MetroMessageBox("Password has been changed Successfully.",this,true);
                     this.Close();
                     return;
                 }
@@ -49,10 +52,9 @@ namespace WindowsFormsApplication1.U
                 {
                     Classes.messagemode.messageget(false, "Error while password change.Please contact administrator");
                     this.Close();
-                    return;                
+                    return;
                 }
             }
-        
         }
     }
 }

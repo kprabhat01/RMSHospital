@@ -219,7 +219,7 @@ namespace WindowsFormsApplication1.P
                 case "E":
                     button1_Click(null, null);
                     break;
-                    
+
             }
         }
 
@@ -287,21 +287,24 @@ namespace WindowsFormsApplication1.P
             try
             {
                 DataTable dt = StoreMenuItems;
-                dt.DefaultView.RowFilter = "menuname like '%" + menuname + "%'";
+                dt.DefaultView.RowFilter = "pro_inventory_cat_id=1 and storeid=" + Stores.SelectedStoreid + " and ForSale=0 and menuname like '%" + menuname + "%'";
                 dt = StoreMenuItems.DefaultView.ToTable();
                 MenuGridview.DataSource = dt;
                 MenuGridview.Columns[0].Visible = false;
+                MenuGridview.Columns[1].Visible = false;
                 MenuGridview.Columns[2].Visible = false;
                 MenuGridview.Columns[3].Visible = false;
                 MenuGridview.Columns[4].Visible = false;
                 MenuGridview.Columns[5].Visible = false;
-                MenuGridview.Columns[6].Visible = false;
                 MenuGridview.Columns[7].Visible = false;
                 MenuGridview.Columns[8].Visible = false;
                 MenuGridview.Columns[9].Visible = false;
                 MenuGridview.Columns[10].Visible = false;
                 MenuGridview.Columns[11].Visible = false;
-                MenuGridview.Columns[1].Width = 200;
+                MenuGridview.Columns[13].Visible = false;
+                MenuGridview.Columns[14].Visible = false;
+                MenuGridview.Columns[15].Visible = false;
+                MenuGridview.Columns[6].Width = 200;
                 MenuGridview.Columns[12].Width = 60;
                 MenuGridview.Columns[12].DefaultCellStyle.BackColor = Color.Green;
                 MenuGridview.Columns[12].DefaultCellStyle.ForeColor = Color.White;
@@ -326,7 +329,7 @@ namespace WindowsFormsApplication1.P
             if (e.Control)
                 KeyCaseValue(e.KeyCode.ToString());
             else
-                keyCase(e.KeyCode.ToString());            
+                keyCase(e.KeyCode.ToString());
         }
         void GetAttendent()
         {
@@ -418,9 +421,9 @@ namespace WindowsFormsApplication1.P
             {
                 try
                 {
-                    SelectedMenuName = MenuGridview.SelectedRows[0].Cells[1].Value.ToString();
+                    SelectedMenuName = MenuGridview.SelectedRows[0].Cells["MenuName"].Value.ToString();
                     SelectedMenuId = MenuGridview.SelectedRows[0].Cells[0].Value.ToString();
-                    printname = MenuGridview.SelectedRows[0].Cells[2].Value.ToString();
+                    printname = MenuGridview.SelectedRows[0].Cells["PrintName"].Value.ToString();
                     price = float.Parse(MenuGridview.SelectedRows[0].Cells[12].Value.ToString());
                     ItemName.Text = SelectedMenuName;
                     Qtn.Clear();
@@ -450,7 +453,7 @@ namespace WindowsFormsApplication1.P
         private void OrderTemp_KeyDown(object sender, KeyEventArgs e)
         {
             //keyCase(e.KeyCode.ToString());
-            if (e.KeyCode == Keys.Escape)
+            if (e.KeyCode == Keys.Escape || e.KeyCode == Keys.Delete)
             {
                 try
                 {
@@ -475,14 +478,38 @@ namespace WindowsFormsApplication1.P
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SelectedMenuName = MenuGridview.SelectedRows[0].Cells[1].Value.ToString();
+                SelectedMenuName = MenuGridview.SelectedRows[0].Cells["menuname"].Value.ToString();
                 SelectedMenuId = MenuGridview.SelectedRows[0].Cells[0].Value.ToString();
                 price = float.Parse(MenuGridview.SelectedRows[0].Cells[12].Value.ToString());
-                printname = MenuGridview.SelectedRows[0].Cells[2].Value.ToString();
+                printname = MenuGridview.SelectedRows[0].Cells["printname"].Value.ToString();
                 ItemName.Text = SelectedMenuName;
                 Qtn.Clear();
                 Qtn.Focus();
             }
+            if (e.Control && e.KeyCode == Keys.L)
+            {
+                try
+                {
+                    if (MenuMaster.MenuDependency.Select("MenuMappedId=" + MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString() + " and StoreId=" + Stores.SelectedStoreid + " and DependencyType=1").Length >= 1)
+                    {
+                        AddLoose Loose = new AddLoose(int.Parse(MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString()), MenuGridview.SelectedRows[0].Cells["MenuName"].Value.ToString(), Stores.SelectedStoreid,1);
+                        Loose.ShowDialog();
+                    }
+                    else
+                        messagemode.messageget(false, "Selected Option is not configured for loose.");
+                }
+                catch (Exception)
+                {
+                    messagemode.MetroMessageBox("Please select Item", this, false);
+                }
+            }
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                I.StoreStock Stk = new I.StoreStock(Stores.SelectedStoreid, Stores.Selectedstorename, false, MenuGridview.SelectedRows[0].Cells["MenuName"].Value.ToString());
+                Stk.ShowDialog();
+
+            }
+
         }
         void gettempMenu()
         {
@@ -667,6 +694,31 @@ namespace WindowsFormsApplication1.P
             {
                 // do nothing
             }
+        }
+
+        private void addToLooseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MenuGridview.SelectedRows.Count == 1)
+            {
+                if (MenuMaster.MenuDependency.Select("MenuMappedId=" + MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString() + " and StoreId=" + Stores.SelectedStoreid + " and DependencyType=1").Length >= 1)
+                {
+                    AddLoose Loose = new AddLoose(int.Parse(MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString()), MenuGridview.SelectedRows[0].Cells["MenuName"].Value.ToString(), Stores.SelectedStoreid);
+                    Loose.ShowDialog();
+                }
+                else
+                    messagemode.messageget(false, "Selected Option is not configured for loose.");
+            }
+        }
+
+        private void currentStockToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void currentStockToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            I.StoreStock Stk = new I.StoreStock(Stores.SelectedStoreid, Stores.Selectedstorename, false);
+            Stk.ShowDialog();
         }
 
         private void button4_Click(object sender, EventArgs e)

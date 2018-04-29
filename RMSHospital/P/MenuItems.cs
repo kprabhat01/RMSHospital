@@ -9,11 +9,65 @@ using System.Collections.Generic;
 
 namespace WindowsFormsApplication1.P
 {
-    public partial class MenuItems : Form
+    public partial class MenuItems : MetroFramework.Forms.MetroForm
     {
         public MenuItems()
         {
             InitializeComponent();
+            SelectStore st = new SelectStore();
+            st.ShowDialog();
+            if (Stores.SelectedStoreid >= 1)
+            {
+                this.MaximizeBox = false;
+                this.MinimizeBox = false;
+                this.Text = Stores.Selectedstorename;
+                colorcode.Text = "ff408080";
+                // getMenugroup();
+
+                //loading menulist for the store.
+                MenuFilter();
+                //gettting menu from filter
+                getPatantmenu();
+                // Finished product markation
+                GetProductCat();
+                radioButton4.Checked = true;
+                chkSale.Checked = true;
+                this.New.Checked = true;
+            }
+            else
+            {
+                messagemode.messageget(false, "Store is not selected.");
+                this.Close();
+            }
+        }
+        public MenuItems(int IStoreID, string IStoreName)
+        {
+            InitializeComponent();
+
+            if (IStoreID >= 1)
+            {
+                this.MaximizeBox = false;
+                this.MinimizeBox = false;
+                this.Text = IStoreName;
+                colorcode.Text = "ff408080";
+                // getMenugroup();
+
+                //loading menulist for the store.
+                MenuFilter();
+                //gettting menu from filter
+                getPatantmenu();
+                // Finished product markation
+                GetProductCat();
+                radioButton4.Checked = true;
+                chkSale.Checked = true;
+                this.New.Checked = true;
+            }
+            else
+            {
+                messagemode.messageget(false, "Store is not selected.");
+                this.Close();
+            }
+
         }
 
         int activestatus;
@@ -22,7 +76,7 @@ namespace WindowsFormsApplication1.P
         DataTable storemenu;
         TreeNode parentNode = null;
         int selectmenuid;
-
+        ContextMenuStrip contextMenuStrip1 = new ContextMenuStrip();
         private void getMenugroup(int CatID)
         {
             try
@@ -84,11 +138,14 @@ namespace WindowsFormsApplication1.P
             try
             {
                 menulist.Nodes.Clear();
+                menulist.ImageList = imageList1;
+
                 foreach (DataRow dr in MenuMaster.MenuGropTitle.Rows)
                 {
                     parentNode = menulist.Nodes.Add(dr["Catname"].ToString());
+                    parentNode.ImageIndex = 0;
+                    parentNode.SelectedImageIndex = 0;
                     PreChild(int.Parse(dr["id"].ToString()));
-
                 }
                 // menulist.ExpandAll();
             }
@@ -109,7 +166,10 @@ namespace WindowsFormsApplication1.P
                 foreach (DataRow dr in DrMenuSelected)
                 {
                     chidnode = parentNode.Nodes.Add(dr["name"].ToString());
+                    chidnode.ImageIndex = 1;
+                    chidnode.SelectedImageIndex = 1;
                     chidmenu(Convert.ToInt32(dr["id"].ToString()), chidnode);
+
                 }
             }
             catch (Exception ex) { }
@@ -118,7 +178,7 @@ namespace WindowsFormsApplication1.P
         {
 
             string menuname;
-            DataRow[] drrow = storemenu.Select("menugroup=" + parentid + "");
+            DataRow[] drrow = storemenu.Select("menugroup=" + parentid + " and storeid=" + Stores.SelectedStoreid + "");
             //storemenu.DefaultView.RowFilter = "menugroup=" + parentid + "";
             TreeNode chidnode;
             foreach (DataRow dr in drrow)
@@ -135,7 +195,8 @@ namespace WindowsFormsApplication1.P
                     chidnode = parentNode.Nodes.Add(menuname);
                     chidnode.Tag = dr["id"].ToString();
                 }
-
+                chidnode.ImageIndex = 2;
+                chidnode.SelectedImageIndex = 2;
             }
 
         }
@@ -144,7 +205,7 @@ namespace WindowsFormsApplication1.P
         {
             try
             {
-                storemenu = Classes.MenuMaster.menulist;
+                storemenu = MenuMaster.menulist;
                 storemenu.DefaultView.RowFilter = "storeid=" + Classes.Stores.SelectedStoreid + "";
                 storemenu = storemenu.DefaultView.ToTable();
             }
@@ -175,32 +236,13 @@ namespace WindowsFormsApplication1.P
         }
         private void MenuItems_Load(object sender, EventArgs e)
         {
-            SelectStore st = new SelectStore();
-            st.ShowDialog();
-            if (Classes.Stores.SelectedStoreid >= 1)
-            {
-                this.MaximizeBox = false;
-                this.MinimizeBox = false;
-                this.Text = Classes.Stores.Selectedstorename;
-               // getMenugroup();
 
-                //loading menulist for the store.
-                MenuFilter();
-                //gettting menu from filter
-                getPatantmenu();
-                // Finished product markation
-                GetProductCat();
-            }
-            else
-            {
-                Classes.messagemode.messageget(false, "Store is not selected.");
-                this.Close();
-            }
+
         }
 
         private void MenuItems_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Classes.Stores.SelectedStoreid = 0;
+            Stores.SelectedStoreid = 0;
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -269,26 +311,117 @@ namespace WindowsFormsApplication1.P
                 }
                 try
                 {
+                    string CurrentDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    List<menu_items> Menu = new List<menu_items>();
+                    List<Menu_Item_Detail> MenuIt = new List<Menu_Item_Detail>();
+
+
+                    DataRow[] DrSelect = Classes.MenuMaster.menulist.Select("MenuName='" + menuname.Text + "'");
+                    if (DrSelect.Length >= 1 && !Update.Checked)
+                    {
+                        messagemode.MetroMessageBox("Product with same name is already available in " + DrSelect[0]["storename"].ToString() + ", Kindly use copy option to import the menu to avoild inventory mismatch.", this, false);
+                        return;
+                    }
+
                     if (New.Checked == true)
                     {
-                        MySqlCommand cmd = new MySqlCommand("Insert into menu_items(menuname,printname,storeid,menugroup,status,code,orderitem,amount,tax,colorcode,sumAmu,unit) values(?menuname,?printname," + Classes.Stores.SelectedStoreid + "," + groupname.SelectedValue.ToString() + "," + activestatus + ",'" + foodstat + "','" + orderby.Value + "','" + Bcost.Text + "','" + Tcost.Text + "','" + colorcode.Text + "','" + sum + "'," + CmbUnit.SelectedValue.ToString() + ")", detail.con);
-                        cmd.Parameters.Add("?menuname", MySqlDbType.VarChar).Value = menuname.Text;
-                        cmd.Parameters.Add("?printname", MySqlDbType.VarChar).Value = Code.Text;
-                        detail.con.Open();
-                        cmd.ExecuteNonQuery();
-                        detail.con.Close();
-                        menuname.Text = "";
-                        Code.Text = "";
+                        Menu.Add(new menu_items
+                        {
+                            Cdate = CurrentDate,
+                            code = foodstat,
+                            deleteflag = 0,
+                            menugroup = int.Parse(groupname.SelectedValue.ToString()),
+                            unit = int.Parse(CmbUnit.SelectedValue.ToString()),
+                            Username = loginmodule.username,
+                            MenuName = menuname.Text,
+                            PrintName = Code.Text,
+                            ForSale = chkSale.Checked ? 0 : 1
+                        });
+
+                        if (Menu.SaveChanges())
+                        {
+                            Menu = new List<menu_items>();
+                            Menu.Add(new menu_items
+                            {
+                                Username = loginmodule.username,
+                                Cdate = CurrentDate
+                            });
+                            DataTable dt = Menu.ReturnRow();
+                            if (dt.Rows.Count >= 1)
+                            {
+                                MenuIt.Add(new Menu_Item_Detail
+                                {
+                                    Menu_Item_Id = int.Parse(dt.Rows[0]["id"].ToString()),
+                                    StoreId = Stores.SelectedStoreid,
+                                    status = activestatus,
+                                    ColorCode = colorcode.Text,
+                                    IndexCount = int.Parse(orderby.Value.ToString()),
+                                    stock = 0,
+                                    SumAmu = decimal.Parse(sum.ToString()),
+                                    amount = decimal.Parse(Bcost.Text),
+                                    tax = decimal.Parse(Tcost.Text)
+                                });
+                                MenuIt.SaveChanges();
+                                menuname.Text = "";
+                                Code.Text = "";
+                                //colorcode.Text = "";
+                            }
+                        }
                         messagemode.messageget(true, "Saved Successfull");
                     }
-                    else if (Update.Checked == true)
+                    else if (Update.Checked)
                     {
-                        MySqlCommand cmd = new MySqlCommand("Update menu_items set menuname=?menuname,printname=?printname,menugroup='" + groupname.SelectedValue.ToString() + "',status='" + activestatus + "',code='" + foodstat + "',orderitem=" + orderby.Value + ",amount='" + Bcost.Text + "',tax='" + Tcost.Text + "',colorcode='" + colorcode.Text + "',sumAmu='" + sum + "',unit=" + CmbUnit.SelectedValue.ToString() + " where id='" + selectmenuid + "'", detail.con);
+                        if (!messagemode.confirm("Menu Name will be update across the store. Please confirm the status"))
+                            return;
+
+                        Menu.Add(new menu_items
+                        {
+                            Cdate = CurrentDate,
+                            code = foodstat,
+                            deleteflag = 0,
+                            menugroup = int.Parse(groupname.SelectedValue.ToString()),
+                            unit = int.Parse(CmbUnit.SelectedValue.ToString()),
+                            Username = loginmodule.username,
+                            Id = selectmenuid,
+                            MenuName = menuname.Text,
+                            PrintName = Code.Text
+                        });
+                        if (Menu.UpdateChanges())
+                        {
+                            MenuIt.Clear();
+                            MenuIt.Add(new Menu_Item_Detail
+                            {
+                                Menu_Item_Id = selectmenuid,
+                                StoreId = Stores.SelectedStoreid
+                            });
+                            DataTable dt = MenuIt.ReturnRow();
+                            if (dt.Rows.Count >= 1)
+                            {
+                                MenuIt.Clear();
+                                MenuIt.Add(new Menu_Item_Detail
+                                {
+                                    StoreId = Stores.SelectedStoreid,
+                                    status = activestatus,
+                                    ColorCode = colorcode.Text,
+                                    IndexCount = int.Parse(orderby.Value.ToString()),
+                                    SumAmu = decimal.Parse(sum.ToString()),
+                                    amount = decimal.Parse(Bcost.Text),
+                                    tax = decimal.Parse(Tcost.Text),
+                                    Id = int.Parse(dt.Rows[0]["Id"].ToString())
+                                });
+                                MenuIt.UpdateChanges();
+                            }
+                        }
+
+
+
+                        /* MySqlCommand cmd = new MySqlCommand("Update menu_items set menuname=?menuname,printname=?printname,menugroup='" + groupname.SelectedValue.ToString() + "',status='" + activestatus + "',code='" + foodstat + "',orderitem=" + orderby.Value + ",amount='" + Bcost.Text + "',tax='" + Tcost.Text + "',colorcode='" + colorcode.Text + "',sumAmu='" + sum + "',unit=" + CmbUnit.SelectedValue.ToString() + " where id='" + selectmenuid + "'", detail.con);
                         cmd.Parameters.Add("?menuname", MySqlDbType.VarChar).Value = menuname.Text;
                         cmd.Parameters.Add("?printname", MySqlDbType.VarChar).Value = Code.Text;
                         detail.con.Open();
                         cmd.ExecuteNonQuery();
-                        detail.con.Close();
+                        detail.con.Close();*/
+
                         messagemode.messageget(true, "Updated Successfull");
 
                     }
@@ -312,13 +445,16 @@ namespace WindowsFormsApplication1.P
                 DataTable dt = MenuMaster.menulist;
                 dt.DefaultView.RowFilter = "id=" + id + "";
                 dt = dt.DefaultView.ToTable();
-                menuname.Text = dt.Rows[0][1].ToString();
-                Code.Text = dt.Rows[0][2].ToString();
-                groupname.SelectedValue = dt.Rows[0][4].ToString();
+                menuname.Text = dt.Rows[0]["menuName"].ToString();
+                Code.Text = dt.Rows[0]["printname"].ToString();
+                CmbProductType.SelectedValue = dt.Rows[0]["pro_inventory_cat_id"].ToString();
+                groupname.SelectedValue = dt.Rows[0]["menugroup"].ToString();
                 colorcode.Text = dt.Rows[0]["colorcode"].ToString();
-                orderby.Value = int.Parse(dt.Rows[0]["orderitem"].ToString());
+                orderby.Value = int.Parse(dt.Rows[0]["indexcount"].ToString());
                 Tcost.Text = dt.Rows[0]["tax"].ToString();
                 Bcost.Text = dt.Rows[0]["amount"].ToString();
+                CmbUnit.SelectedValue = dt.Rows[0]["unit"].ToString();
+                chkSale.Checked = dt.Rows[0]["ForSale"].ToString().Equals("0") ? true : false;
                 if (dt.Rows[0]["code"].ToString() == "V")
                 {
                     radioButton1.Checked = true;
@@ -465,8 +601,57 @@ namespace WindowsFormsApplication1.P
 
         private void button8_Click(object sender, EventArgs e)
         {
-            I.StoreStock Stk = new I.StoreStock(Classes.Stores.SelectedStoreid, Classes.Stores.Selectedstorename);
-            Stk.ShowDialog();
+            //I.StoreStock Stk = new I.StoreStock(Classes.Stores.SelectedStoreid, Classes.Stores.Selectedstorename);
+            //Stk.ShowDialog();
+            contextMenuStrip1.Items.Clear();
+            contextMenuStrip1.Items.Add("Open");
+            contextMenuStrip1.Items.Add("Copy Menu");
+            contextMenuStrip1.Items.Add("Transfer Stock");
+            contextMenuStrip1.Show(button8, new Point(0, button1.Height));
+            contextMenuStrip1.ItemClicked += new ToolStripItemClickedEventHandler(contextMenuStrip1_ItemClicked);
+        }
+        private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            switch (e.ClickedItem.Text)
+            {
+                case "Open":
+                    I.StoreStock Stk = new I.StoreStock(Stores.SelectedStoreid, Stores.Selectedstorename);
+                    Stk.ShowDialog();
+                    break;
+                case "Copy Menu":
+                    I.StoreMenu Menu = new I.StoreMenu(Stores.SelectedStoreid, Stores.Selectedstorename);
+                    Menu.ShowDialog();
+                    break;
+
+                case "Transfer Stock":
+                    if (OpenDay.getstoreOpenlog(Stores.SelectedStoreid))
+                    {
+                        I.SendRequisition Req = new I.SendRequisition(Stores.SelectedStoreid, Stores.Selectedstorename);
+                        Req.ShowDialog();
+                    }
+                    else
+                        messagemode.messageget(false, "Day is not open for the selected store");
+                    break;
+            }
+        }
+
+        private void CmbProductType_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            try
+            {
+                if (CmbProductType.SelectedValue.ToString() != string.Empty)
+                    getMenugroup(int.Parse(CmbProductType.SelectedValue.ToString()));
+            }
+            catch (Exception)
+            {
+                // do nothing
+            }
+        }
+
+        private void chkSale_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!chkSale.Checked)
+                messagemode.MetroMessageBox("Avalible menu will not available in item list for sale.", this, false);
         }
     }
 }

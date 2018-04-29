@@ -24,7 +24,7 @@ namespace WindowsFormsApplication1.U
             {
                 if (Classes.UserManagement.changeid >= 1)
                 {
-                    MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM users where id="+Classes.UserManagement.changeid+" limit 1", detail.con);
+                    MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM users where id=" + Classes.UserManagement.changeid + " limit 1", detail.con);
                     DataTable dt = new DataTable();
                     detail.con.Open();
                     da.Fill(dt);
@@ -38,7 +38,7 @@ namespace WindowsFormsApplication1.U
                         if (int.Parse(dt.Rows[0][6].ToString()) == 0)
                             checkBox1.Checked = true;
                         else
-                            checkBox1.Checked = false;    
+                            checkBox1.Checked = false;
                     }
                 }
             }
@@ -51,7 +51,7 @@ namespace WindowsFormsApplication1.U
         {
             try
             {
-                comboBox1.DataSource = Classes.UserManagement.datata;
+                comboBox1.DataSource = Classes.UserManagement.UserType;
                 comboBox1.ValueMember = "id";
                 comboBox1.DisplayMember = "type";
 
@@ -80,7 +80,7 @@ namespace WindowsFormsApplication1.U
                 passcode.Enabled = false;
                 repasscode.Enabled = false;
             }
-            
+
         }
         private void Users_Load(object sender, EventArgs e)
         {
@@ -99,7 +99,7 @@ namespace WindowsFormsApplication1.U
         private void button4_Click(object sender, EventArgs e)
         {
             chekstat();
-            if (firstname.Text.Length == 0 || lastname.Text.Length == 0 || login.Text.Length==0)
+            if (firstname.Text.Length == 0 || lastname.Text.Length == 0 || login.Text.Length == 0)
             {
                 Classes.messagemode.messageget(false, "FirstName or Lastname is blank.");
                 return;
@@ -116,10 +116,11 @@ namespace WindowsFormsApplication1.U
                     Classes.messagemode.messageget(false, "Password doesn't match with confirm password.");
                     return;
                 }
-                else {
+                else
+                {
                     try
                     {
-                        MySqlCommand cmd = new MySqlCommand("Insert into users(ufname,ulname,uname,pwd,utype,status) values(?ufname,?ulname,?uname,?pwd," + comboBox1.SelectedValue.ToString() + "," + status + ")",detail.con);
+                        MySqlCommand cmd = new MySqlCommand("Insert into users(ufname,ulname,uname,pwd,utype,status) values(?ufname,?ulname,?uname,?pwd," + comboBox1.SelectedValue.ToString() + "," + status + ")", detail.con);
                         cmd.Parameters.Add("?ufname", MySqlDbType.VarChar).Value = firstname.Text;
                         cmd.Parameters.Add("?ulname", MySqlDbType.VarChar).Value = lastname.Text;
                         cmd.Parameters.Add("?pwd", MySqlDbType.VarChar).Value = Classes.enc.Encrypt(passcode.Text);
@@ -128,31 +129,38 @@ namespace WindowsFormsApplication1.U
                         cmd.ExecuteNonQuery();
                         detail.con.Close();
                         Classes.messagemode.messageget(true, "Successfully Inserted.");
+                        Classes.loginmodule.GetUser();
                     }
                     catch (Exception ex)
                     {
                         Classes.writeme.errorname(ex);
                         Classes.messagemode.messageget(false, "Error while saving information");
-                    }                
+                    }
                 }
             }
             else if (Classes.UserManagement.changeid == 0)
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand("update users ufname=?ufname,ulname=?ulname,uname=?uname,utype=" + comboBox1.SelectedValue.ToString() + ",status=" + status + " where id=" + Classes.UserManagement.changeid + "",detail.con);
+                    MySqlCommand cmd = new MySqlCommand("update users ufname=?ufname,ulname=?ulname,uname=?uname,utype=" + comboBox1.SelectedValue.ToString() + ",status=" + status + " where id=" + Classes.UserManagement.changeid + "", detail.con);
                     detail.con.Open();
                     cmd.ExecuteNonQuery();
                     detail.con.Close();
                     Classes.messagemode.messageget(true, "Successfully Updated.");
+                    Classes.loginmodule.GetUser();
                 }
                 catch (Exception ex)
                 {
                     Classes.writeme.errorname(ex);
-                    Classes.messagemode.messageget(false, "Error while saving information"); 
+                    Classes.messagemode.messageget(false, "Error while saving information");
                 }
-               
+
             }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

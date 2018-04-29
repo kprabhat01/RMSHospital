@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 
 namespace WindowsFormsApplication1
 {
-    public partial class Home : Form
+    public partial class Home : MetroFramework.Forms.MetroForm
     {
-        public Home()
-        {
-            InitializeComponent();
-        }
+
 
         ToolStripMenuItem MnuStripItem;
         DataTable forsubmenu;
@@ -23,7 +16,11 @@ namespace WindowsFormsApplication1
         string name;
         int i = 0;
         bool checkConf = false;
+        public Home()
+        {
+            InitializeComponent();
 
+        }
         protected void getMymenu()
         {
             try
@@ -63,20 +60,34 @@ namespace WindowsFormsApplication1
         {
             try
             {
-                Form frm = (Form)Assembly.GetExecutingAssembly().CreateInstance("WindowsFormsApplication1." + formname);
-                if (openid == 0)
+                if (openid == 0 || openid == 1)
                 {
-                    frm.ShowDialog();
+                    Form frm = (Form)Assembly.GetExecutingAssembly().CreateInstance("WindowsFormsApplication1." + formname);
+                    if (openid == 0)
+                    {
+                        frm.ShowDialog();
+                    }
+                    else if (openid == 1)
+                    {
+                        //SubForm frm = SubForm.InstanceForm();
+                        frm.TopLevel = false;
+                        MainPanel.Controls.Add(frm);
+                        //frm.MdiParent = this;
+                        frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                        //frm.Dock = DockStyle.Fill;                   
+
+                        frm.BringToFront();
+                        frm.Show();
+                    }
                 }
-                else if (openid == 1)
+                else if (openid == 2)
                 {
-                    //SubForm frm = SubForm.InstanceForm();
-                    frm.TopLevel = false;
-                    MainPanel.Controls.Add(frm);
-                    frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                    frm.Dock = DockStyle.Fill;
-                    frm.Show();
+                    UserControl Control = (UserControl)Assembly.GetExecutingAssembly().CreateInstance("WindowsFormsApplication1." + formname);
+                    MainPanel.Controls.Add(Control);                  
+                    Control.BringToFront();
+                    Control.Show();
                 }
+
             }
             catch (Exception ex)
             {
@@ -85,16 +96,17 @@ namespace WindowsFormsApplication1
         }
         protected void butclick(object sender, EventArgs e)
         {
-             var itemText = (sender as ToolStripMenuItem).Text;
-             DataRow[] des = submenu.Select("menuname='" + itemText + "'");
-             foreach (DataRow dr in des)
-             {
-                 if (dr[0].ToString() == itemText)
-                 {
-                     getMenuOpne(dr[1].ToString(), int.Parse(dr[2].ToString()));
-                 }
-             }
-            
+            var itemText = (sender as ToolStripMenuItem).Text;
+            DataRow[] des = submenu.Select("menuname='" + itemText + "'");
+            foreach (DataRow dr in des)
+            {
+                if (dr[0].ToString() == itemText)
+                {
+                    getMenuOpne(dr[1].ToString(), int.Parse(dr[2].ToString()));
+                }
+            }
+
+
         }
         void Form_KeyDown(object sender, KeyEventArgs e)
         {
@@ -102,24 +114,29 @@ namespace WindowsFormsApplication1
         }
         void keyCase(string s)
         {
-            switch (s) {
+            switch (s)
+            {
                 case "F1":
                     P.OrderBox O = new P.OrderBox();
                     O.ShowDialog();
                     break;
             }
-                
+
         }
         private void Home_Load(object sender, EventArgs e)
         {
             submenu = Classes.getMenu.sublist(Classes.loginmodule.utype);
             getMymenu();
-            this.Text="LightInfotech ("+Classes.loginmodule.username+")";
+            this.Text = "LightInfotech (" + Classes.loginmodule.username + ")";
+            this.WindowState = FormWindowState.Maximized;
+            Classes.FrmHelper.Frmheight = this.MainPanel.Height;
+            Classes.FrmHelper.FrmWidth = this.MainPanel.Width;
+
         }
 
         private void Home_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (checkConf==false)
+            if (checkConf == false)
             {
                 if (Classes.messagemode.confirm("Are you sure to Close the application ?"))
                 {
@@ -131,7 +148,8 @@ namespace WindowsFormsApplication1
                     e.Cancel = true;
                 }
             }
-            else {
+            else
+            {
                 Application.Exit();
             }
         }
@@ -140,8 +158,6 @@ namespace WindowsFormsApplication1
         {
             //Application.Exit();
         }
-
-       
 
         private void Home_KeyPress(object sender, KeyEventArgs e)
         {

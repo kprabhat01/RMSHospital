@@ -16,7 +16,7 @@ namespace WindowsFormsApplication1.Classes
 
         // Userinformation and details 
         public static int changeid;
-        public static DataTable datata;
+        public static DataTable UserType;
         public static int Sutypeid;
         public static string SutypeName;
         //
@@ -42,9 +42,9 @@ namespace WindowsFormsApplication1.Classes
             try
             {
                 MySqlDataAdapter da = new MySqlDataAdapter("SELECT * FROM utype WHERE deleteflag=0 ORDER BY TYPE",detail.con);
-                datata = new DataTable();
+                UserType = new DataTable();
                 detail.con.Open();
-                da.Fill(datata);
+                da.Fill(UserType);
                 detail.con.Close();
             }
             catch (Exception ex)

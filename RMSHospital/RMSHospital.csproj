@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WindowsFormsApplication1</RootNamespace>
     <AssemblyName>RMSHospital</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -60,6 +60,10 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrystalDecisions.CrystalReports.Engine.1.0.0\lib\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MetroFramework, Version=1.4.0.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MetroModernUI.1.4.0.0\lib\net\MetroFramework.dll</HintPath>
@@ -91,18 +95,55 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="A\AcEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="A\AcEntry.Designer.cs">
+      <DependentUpon>AcEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="A\VenAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="A\VenAccount.Designer.cs">
+      <DependentUpon>VenAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="A\VendorAccount.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="A\VendorAccount.Designer.cs">
       <DependentUpon>VendorAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\FrmHelper.cs" />
     <Compile Include="Classes\UnitHelper.cs" />
     <Compile Include="I\Categories.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="I\Categories.Designer.cs">
       <DependentUpon>Categories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="I\FrmDependency.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="I\FrmDependency.Designer.cs">
+      <DependentUpon>FrmDependency.cs</DependentUpon>
+    </Compile>
+    <Compile Include="I\FrmWastage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="I\FrmWastage.Designer.cs">
+      <DependentUpon>FrmWastage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="I\SendRequisition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="I\SendRequisition.Designer.cs">
+      <DependentUpon>SendRequisition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="I\StoreMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="I\StoreMenu.Designer.cs">
+      <DependentUpon>StoreMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="I\StoreStock.cs">
       <SubType>Form</SubType>
@@ -115,6 +156,24 @@
     </Compile>
     <Compile Include="I\Units.Designer.cs">
       <DependentUpon>Units.cs</DependentUpon>
+    </Compile>
+    <Compile Include="P\AddLoose.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="P\AddLoose.Designer.cs">
+      <DependentUpon>AddLoose.cs</DependentUpon>
+    </Compile>
+    <Compile Include="P\POSOrder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="P\POSOrder.Designer.cs">
+      <DependentUpon>POSOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RMSLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RMSLogin.Designer.cs">
+      <DependentUpon>RMSLogin.cs</DependentUpon>
     </Compile>
     <Compile Include="R\AttendenceReport.cs">
       <SubType>Form</SubType>
@@ -184,14 +243,6 @@
       <DependentUpon>CustomerManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="detail.cs" />
-    <Compile Include="G:\Projects\RMSHospital\project\lightlogin.cs">
-      <Link>lightlogin.cs</Link>
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="G:\Projects\RMSHospital\project\lightlogin.Designer.cs">
-      <DependentUpon>lightlogin.cs</DependentUpon>
-      <Link>lightlogin.Designer.cs</Link>
-    </Compile>
     <Compile Include="Home.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -248,17 +299,44 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="A\AcEntry.resx">
+      <DependentUpon>AcEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="A\VenAccount.resx">
+      <DependentUpon>VenAccount.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="A\VendorAccount.resx">
       <DependentUpon>VendorAccount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="I\Categories.resx">
       <DependentUpon>Categories.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="I\FrmDependency.resx">
+      <DependentUpon>FrmDependency.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="I\FrmWastage.resx">
+      <DependentUpon>FrmWastage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="I\SendRequisition.resx">
+      <DependentUpon>SendRequisition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="I\StoreMenu.resx">
+      <DependentUpon>StoreMenu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="I\StoreStock.resx">
       <DependentUpon>StoreStock.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="I\Units.resx">
       <DependentUpon>Units.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="P\AddLoose.resx">
+      <DependentUpon>AddLoose.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="P\POSOrder.resx">
+      <DependentUpon>POSOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RMSLogin.resx">
+      <DependentUpon>RMSLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="R\AttendenceReport.resx">
       <DependentUpon>AttendenceReport.cs</DependentUpon>
@@ -280,10 +358,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Cus\CustomerManagement.resx">
       <DependentUpon>CustomerManagement.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="G:\Projects\RMSHospital\project\lightlogin.resx">
-      <DependentUpon>lightlogin.cs</DependentUpon>
-      <Link>lightlogin.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
@@ -380,8 +454,14 @@
     <EmbeddedResource Include="U\changepass.resx">
       <DependentUpon>changepass.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="U\ChangePassword.resx">
+      <DependentUpon>ChangePassword.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="U\ManageUsers.resx">
       <DependentUpon>ManageUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="U\SecSettings.resx">
+      <DependentUpon>SecSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="U\SecuritySettings.resx">
       <DependentUpon>SecuritySettings.cs</DependentUpon>
@@ -536,11 +616,23 @@
     <Compile Include="U\changepass.Designer.cs">
       <DependentUpon>changepass.cs</DependentUpon>
     </Compile>
+    <Compile Include="U\ChangePassword.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="U\ChangePassword.Designer.cs">
+      <DependentUpon>ChangePassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="U\ManageUsers.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="U\ManageUsers.Designer.cs">
       <DependentUpon>ManageUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="U\SecSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="U\SecSettings.Designer.cs">
+      <DependentUpon>SecSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="U\SecuritySettings.cs">
       <SubType>Form</SubType>
@@ -591,6 +683,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Custom-Icon-Design-Pretty-Office-8-Users.ico" />
+    <None Include="Resources\icons8-add-new-32.png" />
+    <None Include="Resources\icons8-small-business-24.png" />
+    <None Include="Resources\icons8-drop-down-16 %281%29.png" />
+    <None Include="Resources\icons8-drop-down-16.png" />
+    <None Include="Resources\User.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

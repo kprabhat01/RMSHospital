@@ -70,7 +70,7 @@ namespace WindowsFormsApplication1.R
                         dataGridView1.Columns[4].Width = 81;
                         dataGridView1.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-                       
+
                     }
                 }
                 catch (Exception ex)

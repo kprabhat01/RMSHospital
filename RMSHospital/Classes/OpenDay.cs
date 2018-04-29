@@ -101,7 +101,7 @@ namespace WindowsFormsApplication1.Classes
             try
             {
 
-                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT stores.id,stores.storename AS StoreName,day_open_logs.dateDetail AS 'Date',day_open_logs.username AS username FROM day_open_logs,stores WHERE stores.id = day_open_logs.storeid AND day_open_logs.openflag=0", detail.con))
+                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT day_open_logs.id,stores.id AS storeid,stores.storename AS StoreName,day_open_logs.dateDetail AS 'Date',day_open_logs.username AS username FROM day_open_logs,stores WHERE stores.id = day_open_logs.storeid AND day_open_logs.openflag=0", detail.con))
                 {
 
                     detail.con.Open();

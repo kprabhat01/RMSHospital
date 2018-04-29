@@ -30,20 +30,20 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Users));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.firstname = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lastname = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.passcode = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.login = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.repasscode = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.login = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.passcode = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lastname = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.firstname = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,77 +69,47 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "User Management";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
-            // firstname
+            // login
             // 
-            this.firstname.Location = new System.Drawing.Point(27, 38);
-            this.firstname.MaxLength = 30;
-            this.firstname.Name = "firstname";
-            this.firstname.Size = new System.Drawing.Size(198, 21);
-            this.firstname.TabIndex = 0;
+            this.login.Location = new System.Drawing.Point(27, 120);
+            this.login.MaxLength = 20;
+            this.login.Name = "login";
+            this.login.Size = new System.Drawing.Size(198, 21);
+            this.login.TabIndex = 3;
             // 
-            // label1
+            // label6
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "First Name *";
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(24, 103);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(44, 13);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "Login*";
             // 
-            // label2
+            // button4
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 63);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Last Name *";
+            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button4.ForeColor = System.Drawing.Color.White;
+            this.button4.Location = new System.Drawing.Point(77, 290);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(81, 23);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "Save";
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // lastname
+            // checkBox1
             // 
-            this.lastname.Location = new System.Drawing.Point(27, 79);
-            this.lastname.MaxLength = 30;
-            this.lastname.Name = "lastname";
-            this.lastname.Size = new System.Drawing.Size(198, 21);
-            this.lastname.TabIndex = 2;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 185);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 13);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Password*";
-            // 
-            // passcode
-            // 
-            this.passcode.Location = new System.Drawing.Point(27, 201);
-            this.passcode.MaxLength = 20;
-            this.passcode.Name = "passcode";
-            this.passcode.PasswordChar = '*';
-            this.passcode.Size = new System.Drawing.Size(198, 21);
-            this.passcode.TabIndex = 6;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 143);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 13);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "User Type *";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(27, 161);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(198, 21);
-            this.comboBox1.TabIndex = 4;
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(81, 268);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(76, 17);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "Is Active";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // label5
             // 
@@ -160,45 +130,76 @@
             this.repasscode.TabIndex = 7;
             this.repasscode.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
-            // checkBox1
+            // comboBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(81, 268);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(76, 17);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Text = "Is Active";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(27, 161);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(198, 21);
+            this.comboBox1.TabIndex = 4;
             // 
-            // button4
+            // label4
             // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(66)))), ((int)(((byte)(124)))));
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(77, 290);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(81, 23);
-            this.button4.TabIndex = 9;
-            this.button4.Text = "Save";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(24, 143);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(76, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "User Type *";
             // 
-            // label6
+            // label3
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(24, 103);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(44, 13);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "Login*";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(24, 185);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(68, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Password*";
             // 
-            // login
+            // passcode
             // 
-            this.login.Location = new System.Drawing.Point(27, 120);
-            this.login.MaxLength = 20;
-            this.login.Name = "login";
-            this.login.Size = new System.Drawing.Size(198, 21);
-            this.login.TabIndex = 3;
+            this.passcode.Location = new System.Drawing.Point(27, 201);
+            this.passcode.MaxLength = 20;
+            this.passcode.Name = "passcode";
+            this.passcode.PasswordChar = '*';
+            this.passcode.Size = new System.Drawing.Size(198, 21);
+            this.passcode.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(24, 63);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Last Name *";
+            // 
+            // lastname
+            // 
+            this.lastname.Location = new System.Drawing.Point(27, 79);
+            this.lastname.MaxLength = 30;
+            this.lastname.Name = "lastname";
+            this.lastname.Size = new System.Drawing.Size(198, 21);
+            this.lastname.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(24, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "First Name *";
+            // 
+            // firstname
+            // 
+            this.firstname.Location = new System.Drawing.Point(27, 38);
+            this.firstname.MaxLength = 30;
+            this.firstname.Name = "firstname";
+            this.firstname.Size = new System.Drawing.Size(198, 21);
+            this.firstname.TabIndex = 0;
             // 
             // Users
             // 
