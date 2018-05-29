@@ -69,6 +69,7 @@
             this.CmbAttendent = new System.Windows.Forms.ComboBox();
             this.PanelAttendent = new System.Windows.Forms.Panel();
             this.OrderTemp = new System.Windows.Forms.DataGridView();
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             ((System.ComponentModel.ISupportInitialize)(this.MenuGridview)).BeginInit();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -369,7 +370,7 @@
             // manageOrdersToolStripMenuItem
             // 
             this.manageOrdersToolStripMenuItem.Name = "manageOrdersToolStripMenuItem";
-            this.manageOrdersToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.manageOrdersToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.manageOrdersToolStripMenuItem.Text = "Manage Orders";
             this.manageOrdersToolStripMenuItem.Click += new System.EventHandler(this.manageOrdersToolStripMenuItem_Click);
             // 
@@ -486,6 +487,11 @@
             this.OrderTemp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.OrderTemp.Size = new System.Drawing.Size(438, 295);
             this.OrderTemp.TabIndex = 48;
+            this.OrderTemp.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OrderTemp_KeyDown);
+            // 
+            // printDocument1
+            // 
+            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
             // 
             // OrderBox
             // 
@@ -587,5 +593,6 @@
         private System.Windows.Forms.ToolStripMenuItem stockToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem currentStockToolStripMenuItem;
         private System.Windows.Forms.DataGridView OrderTemp;
+        private System.Drawing.Printing.PrintDocument printDocument1;
     }
 }

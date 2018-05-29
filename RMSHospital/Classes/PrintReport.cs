@@ -11,7 +11,7 @@ namespace WindowsFormsApplication1.Classes
         public static string tempPath = System.IO.Path.GetTempPath();
         public static string billname = "bill.txt";
         public static string filedetail = tempPath + billname;
-        public static DataTable getStore(int orderid)
+        public static DataTable getStore(int? orderid)
         {
             DataTable dt = new DataTable();
             try
@@ -24,12 +24,12 @@ namespace WindowsFormsApplication1.Classes
             }
             return dt;
         }
-        public static DataTable getOrderItems(int orderid)
+        public static DataTable getOrderItems(int? orderid)
         {
             DataTable dt = new DataTable();
             try
             {
-                dt = SqlHelper.ReturnRows("SELECT menu_items.printname AS PrintName,order_items.qty AS Qty,order_items.comment AS COMMENT, order_items.oamu AS Amount FROM order_items,menu_items WHERE menu_items.id = order_items.menuid AND order_items.orderid=" + orderid + "");
+                dt = SqlHelper.ReturnRows("SELECT menu_items.printname AS PrintName,SUM(order_items.qty) AS Qty, SUM(order_items.oamu) AS Amount FROM order_items,menu_items WHERE menu_items.id = order_items.menuid AND order_items.orderid=" + orderid + " GROUP BY menu_items.id");
 
             }
             catch (Exception e)
@@ -63,7 +63,7 @@ namespace WindowsFormsApplication1.Classes
                 return false;
             }
         }
-        public static DataTable getTaxInfo(int orderid)
+        public static DataTable getTaxInfo(int? orderid)
         {
             DataTable dt = new DataTable();
             try
@@ -165,10 +165,10 @@ namespace WindowsFormsApplication1.Classes
                         foreach (DataRow r in menuitem.Rows)
                         {
                             sw.WriteLine(String.Format("{0,0}  {1,1}", r[1].ToString(), r[0].ToString().PadLeft(2)));
-                            sw.WriteLine(String.Format("{0,0}", r[3].ToString().PadLeft(25)));
+                            sw.WriteLine(String.Format("{0,0}", r[2].ToString().PadLeft(25)));
                             if (r[2].ToString() != "")
                             {
-                                sw.WriteLine("- " + String.Format("{0,0}", "(" + r[2].ToString().PadRight(0) + ")"));
+                                //sw.WriteLine("- " + String.Format("{0,0}", "(" + r[2].ToString().PadRight(0) + ")"));
                             }
                         }
                         //sw.WriteLine("-------------------------");
@@ -204,10 +204,6 @@ namespace WindowsFormsApplication1.Classes
                 //messagemode.messageget(false, ex.Message);
             }
         }
-
-
-
-
 
 
         public static bool printfile(string filename)

@@ -13,6 +13,7 @@ namespace WindowsFormsApplication1.P
 {
     public partial class OrderBox : Form
     {
+        private int? OrderId { get; set; }
         public OrderBox()
         {
             InitializeComponent();
@@ -32,11 +33,12 @@ namespace WindowsFormsApplication1.P
         {
             try
             {
-                using (MySqlCommand cmd = new MySqlCommand("Delete from order_temp where tableid='" + SelectedTable + "'", detail.con))
+                MySqlConnection SqlCon = detail.NewMysql;
+                using (MySqlCommand cmd = new MySqlCommand("Delete from order_temp where tableid='" + SelectedTable + "'", SqlCon))
                 {
-                    detail.con.Open();
+                    SqlCon.Open();
                     cmd.ExecuteNonQuery();
-                    detail.con.Close();
+                    SqlCon.Close();
                     TblNo.Items.Remove(SelectedTable);
                     getInsertedTableInfo(SelectedTable);
                     TblNo.Text = "";
@@ -75,12 +77,13 @@ namespace WindowsFormsApplication1.P
         {
             try
             {
-                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT DISTINCT(tableid) FROM order_temp ORDER BY tableid", detail.con))
+                MySqlConnection SqlCon = detail.NewMysql;
+                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT DISTINCT(tableid) FROM order_temp ORDER BY tableid", SqlCon))
                 {
                     DataTable dt = new DataTable();
-                    detail.con.Open();
+                    SqlCon.Open();
                     da.Fill(dt);
-                    detail.con.Close();
+                    SqlCon.Close();
                     foreach (DataRow dr in dt.Rows)
                     {
                         TblNo.Items.Add(dr[0].ToString());
@@ -127,12 +130,13 @@ namespace WindowsFormsApplication1.P
                 textTotal = 0;
                 texttaxamu = 0;
                 textoverallAmu = 0;
-                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT id,itemid,itemname AS ItemName,qty AS Qty,amount as Amount,Comment,tableid AS Amount FROM order_temp WHERE tableid='" + tblno + "'", detail.con))
+                MySqlConnection SqlCon = detail.NewMysql;
+                using (MySqlDataAdapter da = new MySqlDataAdapter("SELECT id,itemid,itemname AS ItemName,qty AS Qty,amount as Amount,Comment,tableid AS Amount FROM order_temp WHERE tableid='" + tblno + "'", SqlCon))
                 {
                     DataTable dt = new DataTable();
-                    detail.con.Open();
+                    SqlCon.Open();
                     da.Fill(dt);
-                    detail.con.Close();
+                    SqlCon.Close();
                     OrderTemp.DataSource = dt;
                     OrderTemp.Columns[0].Visible = false;
                     OrderTemp.Columns[1].Visible = false;
@@ -168,11 +172,12 @@ namespace WindowsFormsApplication1.P
         {
             try
             {
-                using (MySqlCommand cmd = new MySqlCommand("Delete from order_temp where id=" + insertedid + " limit 1", detail.con))
+                MySqlConnection SqlCon = detail.NewMysql;
+                using (MySqlCommand cmd = new MySqlCommand("Delete from order_temp where id=" + insertedid + " limit 1", SqlCon))
                 {
-                    detail.con.Open();
+                    SqlCon.Open();
                     cmd.ExecuteNonQuery();
-                    detail.con.Close();
+                    SqlCon.Close();
                     getInsertedTableInfo(SelectedTable);
                 }
             }
@@ -492,7 +497,7 @@ namespace WindowsFormsApplication1.P
                 {
                     if (MenuMaster.MenuDependency.Select("MenuMappedId=" + MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString() + " and StoreId=" + Stores.SelectedStoreid + " and DependencyType=1").Length >= 1)
                     {
-                        AddLoose Loose = new AddLoose(int.Parse(MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString()), MenuGridview.SelectedRows[0].Cells["MenuName"].Value.ToString(), Stores.SelectedStoreid,1);
+                        AddLoose Loose = new AddLoose(int.Parse(MenuGridview.SelectedRows[0].Cells["Id"].Value.ToString()), MenuGridview.SelectedRows[0].Cells["MenuName"].Value.ToString(), Stores.SelectedStoreid, 1);
                         Loose.ShowDialog();
                     }
                     else
@@ -544,18 +549,21 @@ namespace WindowsFormsApplication1.P
                 {
                     float trate = float.Parse(Qtn.Text) * price;
 
-                    using (MySqlCommand cmd = new MySqlCommand("Insert into order_temp(itemid,ItemName,qty,userid,rate,amount,comment,tableid,PrintName) values ('" + SelectedMenuId + "',?menuname,'" + Qtn.Text + "','" + Classes.loginmodule.uid + "','" + price + "','" + trate + "','','" + SelectedTable + "',?printname)", detail.con))
+                    MySqlConnection SqlCon = detail.NewMysql;
+                    using (MySqlCommand cmd = new MySqlCommand("Insert into order_temp(itemid,ItemName,qty,userid,rate,amount,comment,tableid,PrintName) values ('" + SelectedMenuId + "',?menuname,'" + Qtn.Text + "','" + Classes.loginmodule.uid + "','" + price + "','" + trate + "','','" + SelectedTable + "',?printname)", SqlCon))
                     {
                         //MessageBox.Show(cmd.te)
                         cmd.Parameters.Add("?menuname", MySqlDbType.VarChar).Value = SelectedMenuName;
-                        cmd.Parameters.Add("?printname", MySqlDbType.VarChar).Value = printname; detail.con.Open();
+                        cmd.Parameters.Add("?printname", MySqlDbType.VarChar).Value = printname;
+                        SqlCon.Open();
                         cmd.ExecuteNonQuery();
-                        detail.con.Close();
+                        SqlCon.Close();
                         getInsertedTableInfo(SelectedTable);
                         Qtn.Text = "";
                         ItemName.Text = "";
                         ItemName.Focus();
                     }
+
 
                 }
                 else
@@ -570,7 +578,12 @@ namespace WindowsFormsApplication1.P
                 Classes.writeme.errorname(ex);
                 return;
             }
+            finally
+            {
+
+            }
         }
+
 
         private void OrderTemp_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
@@ -649,8 +662,11 @@ namespace WindowsFormsApplication1.P
                                         Classes.messagemode.messageget(true, "Order has been placed Successfully");
                                         Classes.PrintReport.printbill(orderid);
                                         if (printbill.Checked)
-                                            Classes.PrintReport.printfile(Classes.PrintReport.filedetail);
-
+                                        {
+                                            OrderId = orderid;
+                                            printDocument1.Print();
+                                            // Classes.PrintReport.printfile(Classes.PrintReport.filedetail);
+                                        }
                                         RemoveSelected();
                                         Classes.OrderMode.placeflag = false;
                                     }
@@ -719,6 +735,122 @@ namespace WindowsFormsApplication1.P
         {
             I.StoreStock Stk = new I.StoreStock(Stores.SelectedStoreid, Stores.Selectedstorename, false);
             Stk.ShowDialog();
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            try
+            {
+                if (OrderId != null)
+                {
+                    DataTable dtdetail = PrintReport.getStore(OrderId);
+                    DataTable menuitem = PrintReport.getOrderItems(OrderId);
+                    DataTable taxses = PrintReport.getTaxInfo(OrderId);
+                    Graphics graphics = e.Graphics;
+
+                    Font font10 = new Font("Arial", 8);
+                    Font font12 = new Font("Arial", 8);
+                    Font font14 = new Font("Arial", 10, FontStyle.Bold);
+
+                    float leading = 4;
+                    float lineheight10 = font10.GetHeight() + leading;
+                    float lineheight12 = font12.GetHeight() + leading;
+                    float lineheight14 = font14.GetHeight() + leading;
+
+                    float startX = 0;
+                    float startY = leading;
+                    float Offset = 0;
+
+                    StringFormat formatLeft = new StringFormat(StringFormatFlags.NoClip);
+                    StringFormat formatCenter = new StringFormat(formatLeft);
+                    StringFormat formatRight = new StringFormat(formatLeft);
+
+                    formatCenter.Alignment = StringAlignment.Center;
+                    formatRight.Alignment = StringAlignment.Far;
+                    formatLeft.Alignment = StringAlignment.Near;
+
+                    SizeF layoutSize = new SizeF(270 - Offset * 2, lineheight14);
+                    RectangleF layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+
+                    Brush brush = Brushes.Black;
+                    graphics.DrawString(dtdetail.Rows[0]["printname"].ToString(), font14, brush, layout, formatCenter);
+                    Offset = Offset + lineheight14;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+
+                    graphics.DrawString("Receipt No :" + OrderId, font14, brush, layout, formatLeft);
+                    Offset = Offset + lineheight14;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+
+                    graphics.DrawString("Date :" + DateTime.Parse(dtdetail.Rows[0]["orderdatetime"].ToString()).ToString("dd MMM yyyy HH:mm"), font12, brush, layout, formatLeft);
+                    Offset = Offset + lineheight12;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+
+                    graphics.DrawString("Table No :" + dtdetail.Rows[0]["tableid"].ToString(), font12, brush, layout, formatLeft);
+                    Offset = Offset + lineheight12;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+
+                    graphics.DrawString("Attendent :" + dtdetail.Rows[0]["AttenName"].ToString(), font12, brush, layout, formatLeft);
+                    Offset = Offset + lineheight12;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    graphics.DrawString("Customer :", font12, brush, layout, formatLeft);
+                    Offset = Offset + lineheight12;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    if (dtdetail.Rows[0]["Add_Comment"].ToString().Length >= 1)
+                    {
+                        graphics.DrawString(dtdetail.Rows[0]["Add_Comment"].ToString(), font12, brush, layout, formatLeft);
+                        Offset = Offset + lineheight12;
+                        layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    }
+                    graphics.DrawString("".PadRight(84, '.'), font10, brush, layout, formatLeft);
+                    Offset = Offset + lineheight10;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    graphics.DrawString("Item Name".PadLeft(4), font10, brush, layout, formatLeft);
+                    graphics.DrawString("Qty".PadLeft(4), font10, brush, layout, formatCenter);
+                    graphics.DrawString("Price".PadLeft(4), font10, brush, layout, formatRight);
+                    Offset = Offset + lineheight12;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    graphics.DrawString("".PadRight(84, '.'), font10, brush, layout, formatLeft);
+                    Offset = Offset + lineheight10;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    for (int i = 0; i < menuitem.Rows.Count; i++)
+                    {
+                        layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                        graphics.DrawString(menuitem.Rows[i][0].ToString().PadLeft(4), font10, brush, layout, formatLeft);
+                        graphics.DrawString(menuitem.Rows[i][1].ToString().PadLeft(4), font10, brush, layout, formatCenter);
+                        graphics.DrawString(menuitem.Rows[i][2].ToString().PadLeft(30), font10, brush, layout, formatRight);
+                        Offset = Offset + lineheight10;
+                    }
+                    Offset = Offset + lineheight10;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    graphics.DrawString("".PadRight(84, '.'), font10, brush, layout, formatLeft);
+                    Offset = Offset + lineheight10;
+                    foreach (DataRow taxRow in taxses.Rows)
+                    {
+                        layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                        graphics.DrawString(taxRow["taxname"].ToString().PadLeft(4), font10, brush, layout, formatCenter);
+                        graphics.DrawString(taxRow["Amount"].ToString().PadLeft(4), font10, brush, layout, formatRight);
+                        Offset = Offset + lineheight10;
+                    }
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    graphics.DrawString("Total".PadLeft(4), font14, brush, layout, formatCenter);
+                    graphics.DrawString(dtdetail.Rows[0]["PaidAmu"].ToString().PadLeft(4), font14, brush, layout, formatRight);
+                    Offset = Offset + lineheight10;
+                    layout = new RectangleF(new PointF(startX, startY + Offset), layoutSize);
+                    graphics.DrawString("".PadRight(20, '*'), font10, brush, layout, formatLeft);
+                    graphics.DrawString("Thankyou".PadRight(30), font10, brush, layout, formatCenter);
+                    graphics.DrawString("".PadRight(20, '*'), font10, brush, layout, formatRight);
+                    font10.Dispose(); font12.Dispose(); font14.Dispose();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                writeme.errorname(ex);
+            }
+            finally
+            {
+                OrderId = null;
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
