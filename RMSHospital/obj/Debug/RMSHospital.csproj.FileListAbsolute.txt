@@ -319,3 +319,4 @@ C:\Users\P6430986\Desktop\RMSHospital\RMSHospital\obj\Debug\WindowsFormsApplicat
 C:\Users\P6430986\Desktop\RMSHospital\RMSHospital\obj\Debug\RMSHospital.csproj.GenerateResource.Cache
 C:\Users\P6430986\Desktop\RMSHospital\RMSHospital\obj\Debug\RMSHospital.exe
 C:\Users\P6430986\Desktop\RMSHospital\RMSHospital\obj\Debug\RMSHospital.pdb
+C:\Users\P6430986\Desktop\RMSHospital\RMSHospital\obj\Debug\RMSHospital.csprojResolveAssemblyReference.cache
